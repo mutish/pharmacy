@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../db/connection.js';
 
-const Message = sequelize.define("Message", {
+const Messages = sequelize.define("Messages", {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -12,7 +12,7 @@ const Message = sequelize.define("Message", {
         allowNull: false,
     },
     senderType: {
-        type: DataTypes.ENUM("user", "pharmacist", "ai"),
+        type: DataTypes.ENUM("user", "pharmacist", "AI"),
         allowNull: false,
     },
     content: {
@@ -26,4 +26,4 @@ const Message = sequelize.define("Message", {
 
 });
 
-export default Message
+export default Messages;

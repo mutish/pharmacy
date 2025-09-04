@@ -1,7 +1,7 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../db/connection.js";
 
-const Chat = sequelize.define("Chat", {
+const Chats = sequelize.define("Chats", {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -24,4 +24,4 @@ const Chat = sequelize.define("Chat", {
   },
 });
 
-export default Chat;
+export default Chats;
