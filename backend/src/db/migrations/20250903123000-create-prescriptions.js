@@ -1,0 +1,25 @@
+"use strict";
+
+module.exports = {
+  async up(queryInterface, Sequelize) {
+    await queryInterface.createTable("Prescriptions", {
+      id: {
+        type: Sequelize.UUID,
+        defaultValue: Sequelize.literal("gen_random_uuid()"),
+        primaryKey: true,
+      },
+      userId: { type: Sequelize.UUID, allowNull: false },
+      fileUrl: { type: Sequelize.STRING },
+      ocrText: { type: Sequelize.TEXT },
+      medicines: { type: Sequelize.JSONB },
+      isManual: { type: Sequelize.BOOLEAN, defaultValue: false },
+      notes: { type: Sequelize.TEXT },
+      createdAt: { type: Sequelize.DATE, defaultValue: Sequelize.fn("NOW") },
+      updatedAt: { type: Sequelize.DATE, defaultValue: Sequelize.fn("NOW") },
+    });
+  },
+
+  async down(queryInterface) {
+    await queryInterface.dropTable("Prescriptions");
+  },
+};
