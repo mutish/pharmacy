@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import { sequelize } from '../db/connection.js';
 
-const Notification = sequelize.define ("Notification", {
+const Notifications = sequelize.define ("Notifications", {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -39,4 +39,4 @@ const Notification = sequelize.define ("Notification", {
     }
 });
 
-export default Notification;
+export default Notifications;

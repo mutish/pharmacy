@@ -23,6 +23,15 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        id: "c2e88e1a-c2e8-42db-9e42-f1a4af6e2222",
+        name: "Bob Maingi",
+        email: "bob@tibahub.com",
+        password: hashed,
+        role: "user",
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ]);
   },
 
