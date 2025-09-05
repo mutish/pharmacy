@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "main": "server.js",
   "scripts": {
-    "server": "nodemon backend/src/server.js",
     "type": "module",
+    "server": "nodemon backend/src/server.js",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:single": "sequelize db:migrate --to",
     "db:seed": "sequelize db:seed:all",
@@ -33,6 +33,7 @@
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.6",
     "pg": "^8.16.3",
+    "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7",
     "socket.io": "^4.8.1",
     "stripe": "^18.5.0",
