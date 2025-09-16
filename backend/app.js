@@ -6,6 +6,9 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 
 import authRoutes from "./routes/auth.routes.js";
+import productRoutes from "./routes/product.routes.js";
+import cartRoutes from "./routes/cart.route.js";
+import orderRoutes from "./routes/order.routes.js";
 
 
 dotenv.config();
@@ -32,8 +35,9 @@ app.get("/api/health", (req, res) => {
 // import paymentRoutes from "./routes/payment.routes.js";
 
 app.use("/api/auth", authRoutes);
-
-// app.use("/api/orders", orderRoutes);
+app.use("/api/products", productRoutes);
+app.use("api/carts", cartRoutes);
+app.use("/api/orders", orderRoutes);
 // app.use("/api/payments", paymentRoutes);
 
 //Global error handler

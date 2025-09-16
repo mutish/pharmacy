@@ -1,17 +1,17 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { User } = require("../db/models");
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { User } from "../db/models";
 
-exports.registerUser = async ({ name, email, password, role }) => {
+export async function registerUser({ name, email, password, role }) {
   const existing = await User.findOne({ where: { email } });
   if (existing) throw new Error("Email already in use");
 
   const hashed = await bcrypt.hash(password, 10);
   const user = await User.create({ name, email, password: hashed, role });
   return { id: user.id, email: user.email, role: user.role };
-};
+}
 
-exports.loginUser = async ({ email, password }) => {
+export async function loginUser({ email, password }) {
   const user = await User.findOne({ where: { email } });
   if (!user) throw new Error("Invalid credentials");
 
@@ -25,4 +25,4 @@ exports.loginUser = async ({ email, password }) => {
   );
 
   return { token, role: user.role, email: user.email };
-};
+}

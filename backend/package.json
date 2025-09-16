@@ -9,7 +9,7 @@
     "db:migrate:single": "sequelize db:migrate --to",
     "db:seed": "sequelize db:seed:all",
     "db:seed:single": "sequelize db:seed --seed",
-    "db:undo": "sequelize db:migrate:undo",
+    "db:undo": "sequelize db:migrate:undo:all",
     "db:reset": "sequelize db:migrate:undo:all && sequelize db:migrate && sequelize db:seed:all"
   },
   "keywords": [],

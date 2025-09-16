@@ -11,7 +11,7 @@ const Product = sequelize.define("Product", {
         type: DataTypes.STRING,
         allowNull: false,
     },
-    desription: {
+    description: {
         type: DataTypes.TEXT,
     },
     price: {
@@ -22,7 +22,7 @@ const Product = sequelize.define("Product", {
         type: DataTypes.INTEGER,
         defaultValue: 0,
     },
-    requiresPrescription: {
+    prescriptionRequired: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
     }

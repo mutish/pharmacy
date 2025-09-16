@@ -1,4 +1,3 @@
-// src/auth/auth.controller.js
 import bcrypt from "bcrypt";
 import User from "../models/User.js";
 import generateTokenAndSetCookie from "../utils/generateToken.js";
@@ -23,13 +22,13 @@ export async function register(req, res) {
 
     if(newUser) {
       //Generate JWT token here
-      generateTokenAndSetCookie(newUser._id, res);
+      generateTokenAndSetCookie(newUser.id, res);
       await newUser.save();
 
       res.status(201).json({
         message: "User registered successfully",
         user: {
-          id: newUser._id,
+          id: newUser.id,
           name: newUser.name,
           email: newUser.email,
           role: newUser.role
@@ -56,12 +55,12 @@ export async function login(req, res) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    generateTokenAndSetCookie(user._id, res);
+    generateTokenAndSetCookie(user.id, res);
 
     res.status(200).json({ 
       message: "Login successful",
       user: {
-        id: user._id,
+        id: user.id,
         name: user.name,
         email: user.email,
         role: user.role 
