@@ -39,4 +39,10 @@ const Notifications = sequelize.define ("Notifications", {
     }
 });
 
+Notifications.associate = (models) => {
+    Notifications.belongsTo(models.User, {
+      foreignKey: 'userId',
+      as: 'user'
+    });
+  };
 export default Notifications;

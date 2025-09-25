@@ -44,7 +44,15 @@ const Prescription = sequelize.define('Prescription',{
     
 });
 
-User.hasMany(Prescription);
-Prescription.belongsTo(User);
+Prescription.associate = (models) => {
+    Prescription.belongsToMany(models.Product, {
+      through: models.PrescriptionItem,
+      foreignKey: 'prescriptionId'
+    });
+    Prescription.hasMany(models.PrescriptionItem, {
+      foreignKey: 'prescriptionId',
+      as: 'prescribedItems'
+    });
+  };
 
 export default Prescription;

@@ -8,12 +8,20 @@ const Order = sequelize.define( "Order", {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true
     },
+    userId: {
+        type: DataTypes.UUID,
+        allowNull: false
+    },
+    products: {
+        type: DataTypes.JSONB,
+        allowNull: false
+    },
     totalAmount: {
         type: DataTypes.FLOAT,
         allowNull: false
     },
     paymentMethod: {
-        type: DataTypes.ENUM('mpesa', 'stripe', 'paypal'),
+        type: DataTypes.ENUM('mpesa', 'stripe'),
         allowNull: false
     },
     paymentStatus: {
@@ -25,8 +33,15 @@ const Order = sequelize.define( "Order", {
         defaultValue: "pending"
     }
 });
-
-User.hasMany(Order);
-Order.belongsTo(User);
+Order.associate = (models) => {
+    Order.belongsToMany(models.Product, {
+      through: models.OrderItem,
+      foreignKey: 'orderId'
+    });
+    Order.hasMany(models.OrderItem, {
+      foreignKey: 'orderId',
+      as: 'items'
+    });
+}
 
 export default Order;

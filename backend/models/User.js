@@ -26,4 +26,11 @@ const User = sequelize.define('User', {
   }
 });
 
+User.associate = (models) => {
+  User.hasMany(models.Notifications, {
+    foreignKey: 'userId',
+    as: 'notifications'
+  });
+};
+
 export default User;

@@ -26,4 +26,11 @@ const Messages = sequelize.define("Messages", {
 
 });
 
+Messages.associate = (models) => {
+    Messages.belongsTo(models.Chats, {
+      foreignKey: 'chatId',
+      as: 'chat'
+    });
+  };
+
 export default Messages;

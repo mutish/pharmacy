@@ -24,4 +24,19 @@ const Chats = sequelize.define("Chats", {
   },
 });
 
+Chats.associate = (models) => {
+  Chats.hasMany(models.Message, {
+    foreignKey: 'chatId',
+    as: 'messages',
+    onDelete: 'CASCADE' //Auto delete messages
+  });
+  Chats.belongsTo(models.User, {
+    foreignKey: 'userId',
+    as: 'user'
+  });
+  Chats.belongsTo(models.User, {
+    foreignKey: 'pharmacistId',
+    as: 'pharmacist'
+  });
+}
 export default Chats;
