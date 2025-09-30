@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.routes.js";
 import productRoutes from "./routes/product.routes.js";
 import cartRoutes from "./routes/cart.route.js";
 import orderRoutes from "./routes/order.routes.js";
+import mpesaRoutes from "./routes/mpesa.routes.js";
 
 
 dotenv.config();
@@ -38,6 +39,8 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("api/carts", cartRoutes);
 app.use("/api/orders", orderRoutes);
+// Use M-Pesa routes
+app.use('/api/mpesa', mpesaRoutes);
 // app.use("/api/payments", paymentRoutes);
 
 //Global error handler

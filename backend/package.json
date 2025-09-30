@@ -4,7 +4,7 @@
   "main": "server.js",
   "scripts": {
     "type": "module",
-    "server": "nodemon backend/src/server.js",
+    "server": "nodemon backend/server.js",
     "db:migrate": "sequelize db:migrate",
     "db:migrate:single": "sequelize db:migrate --to",
     "db:seed": "sequelize db:seed:all",
@@ -29,6 +29,7 @@
     "jsonwebtoken": "^9.0.2",
     "moment": "^2.30.1",
     "morgan": "^1.10.1",
+    "mpesa-node": "^0.1.3",
     "multer": "^2.0.2",
     "node-cron": "^4.2.1",
     "nodemailer": "^7.0.6",

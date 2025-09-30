@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../db/connection.js';
 import User from "./User.js"
 
-const Order = sequelize.define( "Order", {
+const Order = sequelize.define("Order", {
     id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
@@ -12,36 +12,60 @@ const Order = sequelize.define( "Order", {
         type: DataTypes.UUID,
         allowNull: false
     },
-    products: {
-        type: DataTypes.JSONB,
-        allowNull: false
-    },
     totalAmount: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(10,2),
         allowNull: false
-    },
-    paymentMethod: {
-        type: DataTypes.ENUM('mpesa', 'stripe'),
-        allowNull: false
-    },
-    paymentStatus: {
-        type: DataTypes.ENUM('pending', 'paid', 'failed'),
-        defaultValue: "pending"
     },
     status: {
-        type: DataTypes.ENUM("pending","shipped","delivered","cancelled"),
-        defaultValue: "pending"
+        type: DataTypes.ENUM(
+            'pending', 
+            'processing', 
+            'shipped', 
+            'delivered', 
+            'cancelled',
+            'refunded'
+        ),
+        defaultValue: 'pending'
+    },
+    paymentMethod: {
+        type: DataTypes.ENUM('card', 'mpesa'),
+        allowNull: false
+    },
+    paymentId: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    paymentStatus: {
+        type: DataTypes.ENUM('pending', 'paid', 'failed', 'refunded'),
+        defaultValue: 'pending'
+    },
+    shippingAddress: {
+        type: DataTypes.JSONB,
+        allowNull: false,
+        validate: {
+            notEmpty: true
+        }
+    },
+    transactionId: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    notes: {
+        type: DataTypes.TEXT,
+        allowNull: true
     }
+}, {
+    timestamps: true,
+    updatedAt: 'updatedAt',
+    createdAt: 'createdAt'
 });
+
 Order.associate = (models) => {
-    Order.belongsToMany(models.Product, {
-      through: models.OrderItem,
-      foreignKey: 'orderId'
-    });
-    Order.hasMany(models.OrderItem, {
-      foreignKey: 'orderId',
-      as: 'items'
-    });
-}
+    Order.belongsTo(models.User, { foreignKey: 'userId' });
+    Order.hasMany(models.OrderItem, { 
+        foreignKey: 'orderId',
+        as: 'items',
+        onDelete: 'CASCADE'
+    });};
 
 export default Order;
