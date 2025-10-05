@@ -2,3 +2,5 @@
 .env
 .qodo
 /node_modules
+/uploads
+eng.traineddata
