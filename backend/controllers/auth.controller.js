@@ -1,84 +1,101 @@
-import bcrypt from "bcrypt";
-import User from "../models/User.js";
-import generateTokenAndSetCookie from "../utils/generateToken.js";
+import bcrypt from 'bcryptjs';
 
-export async function register(req, res) {
-  try {
-    const { name, email, password, role } = req.body;
+import User from '../models/user.model.js';
+import generateTokenAndSetCookie from '../utils/generateToken.js';
 
-    const existing = await User.findOne({ where: { email } });
-    if (existing) return res.status(400).json({ message: "Email already exists" });
+export const signup = async (req, res) => {
+    try {
+        const { fullname, email, password,confirmPassword, gender, telno, address }= req.body;
 
-    //hash password
-    const salt = await bcrypt.genSalt(10);
-    const hashed = await bcrypt.hash(password, salt);
-
-    const newUser = new User({
-       name,
-       email,
-       password: hashed,
-       role
-    });
-
-    if(newUser) {
-      //Generate JWT token here
-      generateTokenAndSetCookie(newUser.id, res);
-      await newUser.save();
-
-      res.status(201).json({
-        message: "User registered successfully",
-        user: {
-          id: newUser.id,
-          name: newUser.name,
-          email: newUser.email,
-          role: newUser.role
+        if(password !== confirmPassword){
+            return res.status(400).json({error:"Passwords don't match"})
         }
-      });
-    } else {
-      res.status(400).json({ message: "User registration failed" });
+        const user = await User.findOne({email});
+        if(user){
+            return res.status(400).json({error:"User already exists"})
+        }
+
+        const getRoleFromEmail = (email) => {
+            const domain = email.split('@')[1];
+            if (domain === 'medicare.com') return 'admin';
+            if (domain === 'pharma.medicare.com') return 'pharmacist';
+            return 'patient';
+        };
+        const role =  getRoleFromEmail(email);
+
+        //HASH PASSWORD HERE.
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        const boyProfilePic = `https://avatar.iran.liara.run/public/boy?username=${fullname}`;
+        const girlProfilePic = `https://avatar.iran.liara.run/public/girl?username=${fullname}`;
+
+        const newUser = new User({
+            fullname,
+            email,
+            password: hashedPassword,
+            gender,
+            profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
+            telno,
+            address,
+            role
+        })
+
+        if (newUser) {
+            //Generate JWT token here.
+            generateTokenAndSetCookie(newUser._id, res);
+            await newUser.save();
+
+            console.log("User created successfully");
+            res.status(201).json({
+                _id: newUser._id,
+                fullname: newUser.fullname,
+                email: newUser.email,
+                profilePic: newUser.profilePic,
+                role: newUser.role
+            });
+        }else {
+            res.status(400).json({error:"Invalid user data"});
+        }
+
+    } catch (error) {
+        console.log("Error in signup controller", error.message);
+        res.status(500).json({error:"Internal server error"})
     }
+};
 
-    
-  } catch (err) {
-    console.log("Error in register controller", err.message);
-    res.status(500).json({ message: err.message });
-  }
-}
+export const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+        const user = await User.findOne({email});
+        const isPasswordCorrect = await bcrypt.compare(password, user?.password || "");
 
-export async function login(req, res) {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
-    const isPasswordValid = await bcrypt.compare(password, user?.password || "");
+        if(!user || !isPasswordCorrect){
+            return res.status(400).json({error:"Invalid email or password"});
+        }
+        generateTokenAndSetCookie(user._id, res);
 
-    if (!user || !isPasswordValid) {
-      return res.status(400).json({ message: "Invalid credentials" });
+        res.status(200).json({
+                _id: user._id,
+                fullname: user.fullname,
+                email: user.email,
+                profilePic: user.profilePic,
+                role: user.role
+        });
+
+    } catch (error) {
+        console.log("Error in login controller", error.message);
+        res.status(500).json({error:"Internal server error"});
     }
+};
 
-    generateTokenAndSetCookie(user.id, res);
-
-    res.status(200).json({ 
-      message: "Login successful",
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role 
-      }
-    });
-  } catch (err) {
-    console.log("Error in login controller",err.message);
-    res.status(500).json({ message: err.message });
-  }
-}
-
-export async function logout(req, res) {
-  try {
-    res.cookie("jwt","",{maxAge: 0});
-    res.status(200).json({message: "Log Out sucessful"});
-  } catch (err) {
-    console.log("Error in logout controller", err.message);
-    res.status(500).json({err:"Internal Server Error. Check console logs for more"});
+export const logout = (req, res) => {
+    try {
+        res.cookie("jwt","", { maxAge:0 });
+        res.status(200).json({message:"User logged out successfully"});
+    } catch (error) {
+        console.log("Error in logout controller", error.message);
+        res.status(500).json({error:"Internal server error"});
+    }
     
-  }
-}
+};

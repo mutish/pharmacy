@@ -1,41 +1,26 @@
-import app from "./app.js";
-import dotenv from "dotenv";
-import db from "./db/models/index.js";
-import axios from "axios";
+import express from 'express';
+import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+
+import authRoutes from './routes/auth.routes.js';
+import messageRoutes from './routes/message.routes.js';
+import prescriptionRoutes from './routes/prescription.routes.js';
+import connectToMongoDB from './config/connectToMongoDB.js';
+
+const app = express();
+const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 
-const PORT = process.env.PORT || 3000;
-//app.use(express.json());
+app.use(express.json()); //parse incoming requests with JSON payloads.(from req.body)
+app.use(cookieParser());
 
+app.use("/api/auth", authRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/prescription", prescriptionRoutes);
 
-
-//DB connection
-(async () => {
-    try{
-        await db.sequelize.authenticate();
-        console.log('Database connection has been established successfully.');
-        
-        // Start server
-        app.listen(PORT, () => {
-            console.log(`Server is running on port ${PORT}`);
-        });
-    } catch(error){
-        console.error('Unable to connect to the database:', error);
-        process.exit(1);
-    }
-})();
-
-//mpesa access token
-async function getAccessToken() {
-    const auth = Buffer.from(
-      `${process.env.CONSUMER_KEY}:${process.env.CONSUMER_SECRET}`
-    ).toString("base64");
   
-    const res = await axios.get(
-      "https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials",
-      { headers: { Authorization: `Basic ${auth}` } }
-    );
-  
-    return res.data.access_token;
-}
+app.listen(PORT, () => {
+    connectToMongoDB();
+    console.log(`Server running on port ${PORT}`)
+});
