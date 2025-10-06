@@ -14,11 +14,10 @@ const prescriptionSchema = new mongoose.Schema({
     pharmacistId:{
         type: mongoose.Schema.Types.ObjectId,
         ref:"User",
-        required:true
+        required:false
     },
     uploadedFile: {
         filename: String,
-        originalName:String,
         fileUrl: String,
         fileSize: Number,
         mimetype: String,
