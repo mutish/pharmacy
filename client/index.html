@@ -5,41 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pharmacy Client</title>
   <link rel="stylesheet" href="styles.css">
-  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
-  <link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
+  <!-- Add Bootstrap CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/bootstrap@5.3.3/dist/css/bootstrap.min.css">
 </head>
 <body>
-  <header>
-    <h1>Pharmacy App</h1>
-    <nav>
-      <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Products</a></li>
-        <li><a href="#">Prescriptions</a></li>
-        <li><a href="#">Cart</a></li>
-      </ul>
-    </nav>
+  <header class="bg-primary text-white py-3 mb-4">
+    <div class="container d-flex flex-column flex-md-row align-items-center justify-content-between">
+      <h1 class="mb-2 mb-md-0">Pharmacy App</h1>
+      <nav>
+        <ul class="nav">
+          <li class="nav-item"><a href="#" class="nav-link text-white">Home</a></li>
+          <li class="nav-item"><a href="#" class="nav-link text-white">Products</a></li>
+          <li class="nav-item"><a href="#" class="nav-link text-white">Prescriptions</a></li>
+          <li class="nav-item"><a href="#" class="nav-link text-white">Cart</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
   <main>
-    <section id="hero">
-      <h2>Welcome to the Pharmacy</h2>
-      <p>Your trusted online pharmacy for all your needs.</p>
+    <section id="hero" class="container text-center py-5">
+      <h2 class="display-5 fw-bold mb-3">Welcome to the Pharmacy</h2>
+      <p class="lead mb-4">Your trusted online pharmacy for all your needs.</p>
     </section>
-    <section id="products">
-      <h2>Featured Products</h2>
-      <div class="product-list">
+    <section id="products" class="container mb-5">
+      <h2 class="mb-4">Featured Products</h2>
+      <div class="row product-list">
         <!-- Products will be loaded here by JS -->
       </div>
-      
     </section>
   </main>
-  <footer>
-    <p>&copy; 2025 Pharmacy App</p>
+  <footer class="bg-light text-center py-3 mt-auto">
+    <p class="mb-0">&copy; 2025 Pharmacy App</p>
   </footer>
   <script src="app.js"></script>
-  <script src="https://unpkg.com/@material-tailwind/html@latest/scripts/script-name.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <!-- Add Bootstrap JS (optional, for interactive components) -->
+  <script src="https://unpkg.com/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
