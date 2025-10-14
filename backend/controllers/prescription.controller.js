@@ -225,7 +225,16 @@ export const verifyPrescription = async (req, res) => {
   }
 };
 
-//edit prescription function before verifying
+// Get all prescriptions
+export const getAllPrescriptions = async (req, res) => {
+  try {
+    const prescriptions = await Prescription.find().populate('user', 'fullname email');
+    res.status(200).json(prescriptions);
+  } catch (error) {
+    console.log("Error in getAllPrescriptions controller", error.message);
+    res.status(500).json({error:"Internal server error"});
+  }
+};
 
 
 

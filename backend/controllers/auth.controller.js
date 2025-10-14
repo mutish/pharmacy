@@ -73,6 +73,7 @@ export const login = async (req, res) => {
         if(!user || !isPasswordCorrect){
             return res.status(400).json({error:"Invalid email or password"});
         }
+        // Generate JWT and set cookie
         generateTokenAndSetCookie(user._id, res);
 
         res.status(200).json({
@@ -98,4 +99,13 @@ export const logout = (req, res) => {
         res.status(500).json({error:"Internal server error"});
     }
     
+};
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password'); // Exclude password field
+        res.status(200).json(users);
+    } catch (error) {
+        console.log("Error in getAllUsers controller", error.message);
+        res.status(500).json({error:"Internal server error"});
+    };
 };

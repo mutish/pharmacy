@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Product | Admin | Medicare Pharmacy</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script src="https://cdn.lordicon.com/lordicon.js"></script>
+
+
+  <style>
+    body {
+      background: linear-gradient(120deg, #e3f0ff 0%, #f6fcff 100%);
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body class="bg-base-100 min-h-screen flex flex-col">
+  <!-- Admin Navbar -->
+  <nav class="navbar-custom bg-white shadow-sm border-b border-gray-200 px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center">
+      <span class="navbar-brand text-2xl font-bold text-primary tracking-wide">Medicare<span class="text-blue-500">Admin</span></span>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="/client/pages/admin/addProduct.html" class="btn btn-ghost btn-active">Add Product</a>
+      <a href="/client/pages/admin/products.html" class="btn btn-ghost">Products</a>
+      <a href="/client/pages/admin/orders.html" class="btn btn-ghost">Orders</a>
+      <a href="/client/pages/admin/prescriptions.html" class="btn btn-ghost">Prescriptions</a>
+      <button id="logoutBtn" class="btn btn-primary">Logout</button>
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Admin" class="avatar w-10 h-10 rounded-full ml-2 border border-blue-200" />
+    </div>
+  </nav>
+  <div class="container mx-auto py-12 flex justify-center items-center">
+    <div class="card bg-base-100 shadow-lg rounded-xl p-8 w-full max-w-lg flex flex-col items-center justify-center">
+        <div class="text-center mb-3">
+                 <lord-icon src="/client/assets/wired-outline-139-basket-morph-fill.json" trigger="in" speed="0.5"
+                                stroke="light"
+                                state="fill" colors="primary:#121331,secondary:#104891"
+                                style="width:100px;height:100px">
+                  </lord-icon>
+            </div>
+      <h2 class="text-3xl font-bold text-primary mb-6 text-center">Add New Product</h2>
+      <form id="addProductForm" class="flex flex-col gap-4 w-full items-center" enctype="multipart/form-data">
+        <input type="text" name="productName" class="input input-bordered input-lg rounded-lg w-full text-center" placeholder="Product Name" required>
+
+        <!-- Category dropdown -->
+        <select name="category" class="select select-bordered select-lg rounded-lg w-full text-center" required>
+          <option value="" disabled selected>Select Category</option>
+          <option value="Bone & Joint">Bone & Joint</option>
+          <option value="Diabetes">Diabetes</option>
+          <option value="Kidney">Kidney</option>
+          <option value="Heart">Heart</option>
+          <option value="Skin Care">Skin Care</option>
+          <option value="Vitamins">Vitamins</option>
+          <option value="Allergy">Allergy</option>
+          <option value="Cold & Flu">Cold & Flu</option>
+          <option value="Digestive Health">Digestive Health</option>
+        </select>
+        <input type="url" name="imageUrl" class="input input-bordered input-lg rounded-lg w-full text-center" placeholder="Image URL" required>
+        <input type="number" name="price" class="input input-bordered input-lg rounded-lg w-full text-center" placeholder="Price (Ksh)" min="0" required>
+        <input type="number" name="stock" class="input input-bordered input-lg rounded-lg w-full text-center" placeholder="Stock Quantity" min="0" required>
+        <input type="date" name="mfgDate" class="input input-lg rounded-lg w-full text-center" placeholder="Manufacturer Date" required>
+        <input type="date" name="expDate" class="input input-lg rounded-lg w-full text-center" placeholder="Expiry Date" required>
+        <select name="PrescriptionRequired" class="select select-bordered select-lg w-full text-center" id="prescriptionRequired" required>
+            <option value="" disabled selected>Prescription Required</option>
+            <option value="false">false</option>
+            <option value="true">true</option>
+        </select>
+
+        <textarea name="description" class="textarea textarea-bordered textarea-lg rounded-lg w-full text-center" placeholder="Description" required></textarea>
+        <input type="file" name="image" class="file-input file-input-bordered file-input-lg rounded-lg w-full" accept="image/*" required>
+        <button type="submit" class="btn btn-primary  rounded-lg mt-2 w-full">Add Product</button>
+      </form>
+      <div id="addProductMsg" class="mt-4 text-green-600 font-semibold text-center" style="display:none;"></div>
+    </div>
+  </div>
+  <script>
+    // Example: handle form submission (replace with actual backend call)
+    document.getElementById('addProductForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      document.getElementById('addProductMsg').textContent = "Product added successfully!";
+      document.getElementById('addProductMsg').style.display = "block";
+      this.reset();
+    });
+  </script>
+</body>
+</html>

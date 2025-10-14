@@ -38,7 +38,7 @@ const userSchema =  new mongoose.Schema({
         default: "patient",
     }
 
-});
+}, {timestamps: true});
 
 const User = mongoose.model("User", userSchema);
 

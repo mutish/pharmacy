@@ -210,6 +210,19 @@
     </div>
   </section>
 
+  <!-- Newsletter Subscription Section -->
+  <section class="container mx-auto mb-12 animate-fadein">
+    <div class="card bg-base-100 shadow-lg rounded-xl p-8 max-w-xl mx-auto text-center">
+      <h2 class="text-2xl font-bold text-primary mb-2">Subscribe to our Newsletter</h2>
+      <p class="mb-4 text-gray-600">Get updates on new products, health tips, and exclusive offers.</p>
+      <form id="newsletterForm" class="flex flex-col md:flex-row gap-4 justify-center">
+        <input type="email" class="input input-bordered input-lg rounded-lg flex-1" placeholder="Your email address" required>
+        <button type="submit" class="btn btn-primary btn-lg rounded-lg">Subscribe</button>
+      </form>
+      <div id="newsletterMsg" class="mt-4 text-green-600 font-semibold" style="display:none;"></div>
+    </div>
+  </section>
+
   <!-- Footer Section -->
   <footer class="bg-base-200 py-10 mt-auto animate-fadein">
     <div class="container mx-auto flex justify-center">
@@ -279,6 +292,15 @@
     }
     window.addEventListener('scroll', revealOnScroll);
     window.addEventListener('DOMContentLoaded', revealOnScroll);
+
+    // Newsletter subscription logic
+    document.getElementById('newsletterForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      // You can replace this with an actual backend call
+      document.getElementById('newsletterMsg').textContent = "Thank you for subscribing!";
+      document.getElementById('newsletterMsg').style.display = "block";
+      this.reset();
+    });
   </script>
 </body>
 </html>

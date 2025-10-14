@@ -167,3 +167,13 @@ export const cancelOrder = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+export const getAllOrders = async (req, res) => {
+  try {
+    const orders = await Order.find().populate("items.productId", "productName price imageUrl").sort({ createdAt: -1 });
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
