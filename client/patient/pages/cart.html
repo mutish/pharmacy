@@ -2,10 +2,175 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Cart</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <title>My Cart | Medicare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <h1>Your Cart</h1>
+<body class="bg-base-100 min-h-screen">
+  <!-- Navbar (reuse from shop.html) -->
+  <nav class="navbar bg-base-200 shadow-sm rounded-b-xl px-4 py-2 flex flex-wrap items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/client/index.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+      <a href="shop.html" class="btn btn-outline btn-sm ml-2">← Back to Shop</a>
+    </div>
+    <div class="flex-1 mx-4 max-w-md">
+      <div class="relative w-full">
+        <input type="search" class="input input-bordered w-full pl-4 pr-10" placeholder="Search medicines..." />
+        <span class="absolute right-3 top-2.5 text-gray-400 text-lg">&#128269;</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='cart.html'" title="View Cart">&#128722;</button>
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="avatar cursor-pointer">
+          <div class="w-10 rounded-full border-2 border-primary">
+            <img src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+          </div>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+          <li><a href="/client/index.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Cart Section -->
+  <div class="container mx-auto px-2 py-6">
+    <div id="cartEmpty" class="hidden flex flex-col items-center justify-center py-16">
+      <div class="text-3xl mb-2">Your cart is empty 😢</div>
+      <a href="shop.html" class="btn btn-primary mt-4 transition-all duration-200">Shop Now</a>
+    </div>
+    <div id="cartContent" class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Cart Items -->
+      <div class="md:col-span-2 flex flex-col gap-6" id="cartItems">
+        <!-- JS will render cart item cards here -->
+      </div>
+      <!-- Cart Summary -->
+      <div class="md:col-span-1">
+        <div class="card bg-base-100 shadow-lg p-6">
+          <h2 class="card-title mb-4 text-primary">Cart Summary</h2>
+          <div class="divider"></div>
+          <div class="flex justify-between mb-2 text-base">
+            <span>Subtotal</span>
+            <span id="subtotal">Ksh 0</span>
+          </div>
+          <div class="flex justify-between mb-2 text-base">
+            <span>Delivery Fee</span>
+            <span id="deliveryFee">Ksh 150</span>
+          </div>
+          <div class="flex justify-between font-bold text-lg mt-4">
+            <span>Total</span>
+            <span id="total">Ksh 0</span>
+          </div>
+          <a href="checkout.html" id="checkoutBtn" class="btn btn-primary w-full mt-6 transition-all duration-200">Proceed to Checkout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sample cart data (simulate from localStorage or backend)
+    let cart = [
+      {
+        id: 1,
+        name: "Paracetamol",
+        price: 120,
+        image: "/client/assets/images/paracetamol.jpg",
+        qty: 2
+      },
+      {
+        id: 3,
+        name: "Ibuprofen",
+        price: 180,
+        image: "/client/assets/images/ibuprofen.jpg",
+        qty: 1
+      }
+    ];
+
+    const deliveryFee = 150;
+
+    function renderCart() {
+      const cartItemsDiv = document.getElementById('cartItems');
+      const cartContentDiv = document.getElementById('cartContent');
+      const cartEmptyDiv = document.getElementById('cartEmpty');
+      cartItemsDiv.innerHTML = '';
+
+      if (cart.length === 0) {
+        cartContentDiv.classList.add('hidden');
+        cartEmptyDiv.classList.remove('hidden');
+        updateSummary();
+        return;
+      } else {
+        cartContentDiv.classList.remove('hidden');
+        cartEmptyDiv.classList.add('hidden');
+      }
+
+      cart.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = "card card-bordered flex flex-row items-center gap-4 p-4 shadow transition-all duration-200";
+        card.innerHTML = `
+          <div class="w-20 h-20 rounded-xl overflow-hidden border-2 border-primary flex-shrink-0">
+            <img src="${item.image}" alt="${item.name}" class="w-full h-full object-cover" />
+          </div>
+          <div class="flex-1 flex flex-col gap-1">
+            <div class="font-bold text-lg text-primary">${item.name}</div>
+            <div class="text-base text-gray-500">Ksh ${item.price.toLocaleString()}</div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button class="btn btn-sm btn-outline join-item" aria-label="Decrease" data-idx="${idx}" data-action="dec">-</button>
+            <input type="number" min="1" value="${item.qty}" class="input input-bordered w-20 text-center join-item" data-idx="${idx}" />
+            <button class="btn btn-sm btn-outline join-item" aria-label="Increase" data-idx="${idx}" data-action="inc">+</button>
+          </div>
+          <div class="ml-4">
+            <button class="btn btn-error btn-sm transition-all duration-200" aria-label="Remove" data-idx="${idx}">Remove</button>
+          </div>
+        `;
+        cartItemsDiv.appendChild(card);
+      });
+
+      // Add event listeners for quantity controls and remove buttons
+      cartItemsDiv.querySelectorAll('button[data-action]').forEach(btn => {
+        btn.onclick = function() {
+          const idx = parseInt(this.getAttribute('data-idx'));
+          if (this.getAttribute('data-action') === 'dec') {
+            if (cart[idx].qty > 1) cart[idx].qty--;
+          } else {
+            cart[idx].qty++;
+          }
+          renderCart();
+        };
+      });
+      cartItemsDiv.querySelectorAll('input[type="number"]').forEach(input => {
+        input.onchange = function() {
+          const idx = parseInt(this.getAttribute('data-idx'));
+          let val = parseInt(this.value);
+          if (isNaN(val) || val < 1) val = 1;
+          cart[idx].qty = val;
+          renderCart();
+        };
+      });
+      cartItemsDiv.querySelectorAll('button.btn-error').forEach(btn => {
+        btn.onclick = function() {
+          const idx = parseInt(this.getAttribute('data-idx'));
+          cart.splice(idx, 1);
+          renderCart();
+        };
+      });
+
+      updateSummary();
+    }
+
+    function updateSummary() {
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      document.getElementById('subtotal').textContent = `Ksh ${subtotal.toLocaleString()}`;
+      document.getElementById('deliveryFee').textContent = `Ksh ${cart.length > 0 ? deliveryFee : 0}`;
+      document.getElementById('total').textContent = `Ksh ${(cart.length > 0 ? subtotal + deliveryFee : 0).toLocaleString()}`;
+      document.getElementById('checkoutBtn').classList.toggle('btn-disabled', cart.length === 0);
+    }
+
+    // Initial render
+    renderCart();
+  </script>
 </body>
 </html>

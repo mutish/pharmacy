@@ -1,18 +1,23 @@
 body {
   font-family: 'Inter', sans-serif;
-  background: url("/client/assets/bg.jpg") center/cover no-repeat fixed;
+  background: #f4f8fb; 
   margin: 0;
   padding: 0;
 }
 
+
+
 .card {
   transition: all 0.3s ease;
+  background-color: #eaf4fb; /* Light blue shade for cards */
 }
 
 .card:hover {
   transform: scale(1.05);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
+
+
 
 /* Floating Chat Button Glow */
 .chat-btn {

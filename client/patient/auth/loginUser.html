@@ -76,6 +76,16 @@
     </div>
   </section>
   <script src="auth.js"></script>
+  <script>
+    // Redirect to home.html after successful login
+    document.getElementById('loginForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      // ...existing login logic (e.g., fetch API, validation)...
+      // Simulate successful login (replace with your actual login logic)
+      // If login is successful:
+      window.location.href = "/client/patient/home.html";
+    });
+  </script>
 </body>
 
 </html>
