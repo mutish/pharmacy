@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 import authRoutes from './routes/auth.routes.js';
 import messageRoutes from './routes/message.routes.js';
@@ -18,8 +19,21 @@ const PORT = process.env.PORT || 5000;
 
 dotenv.config();
 
+// Enable CORS for your client (adjust origin as needed)
+app.use(cors({
+    origin: [
+        'http://localhost:5500',
+        'http://127.0.0.1:5500'
+    ],
+    credentials: true // Allow cookies to be sent
+}));
+
 app.use(express.json()); //parse incoming requests with JSON payloads.(from req.body)
 app.use(cookieParser());
+
+// Optionally serve static files (if you want to host client from backend)
+// import path from 'path';
+// app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);

@@ -147,3 +147,14 @@ export const mpesaCallback = async (req, res) => {
         res.status(500).json({ error: 'Callback processing failed' });
     }
 };
+
+
+export const getAllCheckouts = async (req, res) => {
+    try {
+        const checkouts = await Checkout.find().populate('user', 'fullname email');
+        res.status(200).json(checkouts);
+    } catch (error) {
+        console.log("Error in getAllCheckouts controller", error.message);
+        res.status(500).json({error:"Internal server error"});
+    }
+};

@@ -7,7 +7,7 @@ router.use(protectRoute);
 
 router.post("/add", authorize('pharmacist'), addProduct);
 router.put("/update/:productId", authorize('pharmacist'), updateProduct); // <-- add :id param for update
-router.get("/all", getAllProducts);
+router.get("/allproducts", getAllProducts);
 router.get("/category/:category", getProductByCategory);
 router.get("/:productId", getProductById);
 router.delete("/delete/:productId", authorize('admin'), deleteProduct);
