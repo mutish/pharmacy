@@ -357,18 +357,22 @@
                 const usersTableBody = document.getElementById('usersTableBody');
                 usersTableBody.innerHTML = '';
                 users.forEach(user => {
-                    usersTableBody.innerHTML += `
-                        <tr>
-                            <td>${user.userId || user._id}</td>
-                            <td>${user.fullname}</td>
-                            <td>${user.email}</td>
-                            <td>${user.telno}</td>
-                            <td>${user.gender}</td>
-                            <td><img src="${user.profilePic}" alt="Profile" width="40" height="40" style="border-radius:50%"></td>
-                            <td>${user.address}</td>
-                            <td>${user.role}</td>
-                        </tr>
-                    `;
+                    const row = usersTableBody.insertRow();
+                    row.insertCell().textContent = user.userId || user._id;
+                    row.insertCell().textContent = user.fullname;
+                    row.insertCell().textContent = user.email;
+                    row.insertCell().textContent = user.telno;
+                    row.insertCell().textContent = user.gender;
+                    const imgCell = row.insertCell();
+                    const img = document.createElement('img');
+                    img.src = user.profilePic;
+                    img.alt = "Profile";
+                    img.width = 40;
+                    img.height = 40;
+                    img.style.borderRadius = "50%";
+                    imgCell.appendChild(img);
+                    row.insertCell().textContent = user.address;
+                    row.insertCell().textContent = user.role;
                 });
 
                 // Products
