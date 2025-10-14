@@ -2,10 +2,173 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Checkout</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <title>Checkout | Medicare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <h1>Checkout</h1>
+<body class="bg-base-100 min-h-screen">
+  <!-- Navbar (reuse from shop.html) -->
+  <nav class="navbar bg-base-200 shadow-sm rounded-b-xl px-4 py-2 flex flex-wrap items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/client/index.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+      <a href="cart.html" class="btn btn-outline btn-sm ml-2">← Back to Cart</a>
+    </div>
+    <div class="flex-1 mx-4 max-w-md">
+      <div class="relative w-full">
+        <input type="search" class="input input-bordered w-full pl-4 pr-10" placeholder="Search medicines..." />
+        <span class="absolute right-3 top-2.5 text-gray-400 text-lg">&#128269;</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='cart.html'" title="View Cart">&#128722;</button>
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="avatar cursor-pointer">
+          <div class="w-10 rounded-full border-2 border-primary">
+            <img src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+          </div>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+          <li><a href="/client/index.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Checkout Section -->
+  <div class="container mx-auto px-2 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Order Summary -->
+      <div class="md:col-span-1">
+        <div class="card bg-base-100 shadow-md p-6">
+          <h2 class="card-title mb-4 text-primary">Order Summary</h2>
+          <div class="divider"></div>
+          <ul id="orderSummary" class="mb-4">
+            <!-- JS will render order items here -->
+          </ul>
+          <div class="flex justify-between font-bold text-lg mt-4">
+            <span>Total Amount</span>
+            <span id="totalAmount">Ksh 0</span>
+          </div>
+        </div>
+      </div>
+      <!-- Checkout Form -->
+      <div class="md:col-span-2">
+        <form id="checkoutForm" class="card bg-base-100 shadow-md p-8 flex flex-col gap-6">
+          <h1 class="text-3xl font-bold mb-2 text-primary">💳 Checkout</h1>
+          <div class="form-control">
+            <label class="label font-semibold" for="deliveryLocation">Delivery Location</label>
+            <input type="text" id="deliveryLocation" class="input input-bordered w-full" placeholder="Enter delivery address" required>
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="phoneNumber">Phone Number (MPESA)</label>
+            <input type="tel" id="phoneNumber" class="input input-bordered w-full" placeholder="Enter phone number" required pattern="^07\d{8}$">
+          </div>
+          <button type="submit" id="payBtn" class="btn btn-primary w-full mt-4 transition-all duration-200" disabled>Proceed to Payment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader Overlay -->
+  <div id="loaderOverlay" class="fixed inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center z-50 hidden transition-all duration-300">
+    <span class="loading loading-spinner loading-lg text-primary mb-6"></span>
+    <div class="text-xl text-base-100 font-semibold animate-fadein">Processing your payment…</div>
+  </div>
+
+  <!-- Payment Modal -->
+  <dialog id="paymentModal" class="modal">
+    <form method="dialog" class="modal-box flex flex-col items-center">
+      <div id="modalIcon" class="text-5xl mb-2"></div>
+      <h3 id="modalTitle" class="font-bold text-lg mb-2"></h3>
+      <p id="modalMsg" class="mb-4"></p>
+      <button id="modalCloseBtn" class="btn btn-primary w-full transition-all duration-200">Close</button>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <script>
+    // Simulate cart data (should match cart.html)
+    const cart = [
+      { id: 1, name: "Paracetamol", price: 120, qty: 2 },
+      { id: 3, name: "Ibuprofen", price: 180, qty: 1 }
+    ];
+    const deliveryFee = 150;
+
+    // Render order summary
+    function renderOrderSummary() {
+      const ul = document.getElementById('orderSummary');
+      ul.innerHTML = '';
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.className = "flex justify-between items-center py-2 border-b border-base-200";
+        li.innerHTML = `
+          <span class="font-semibold">${item.name} <span class="text-gray-500">x${item.qty}</span></span>
+          <span class="text-base font-medium">Ksh ${(item.price * item.qty).toLocaleString()}</span>
+        `;
+        ul.appendChild(li);
+      });
+      // Total
+      const total = cart.reduce((sum, item) => sum + item.price * item.qty, 0) + deliveryFee;
+      document.getElementById('totalAmount').textContent = `Ksh ${total.toLocaleString()}`;
+    }
+
+    // Form validation and button enable/disable
+    function validateForm() {
+      const location = document.getElementById('deliveryLocation').value.trim();
+      const phone = document.getElementById('phoneNumber').value.trim();
+      const payBtn = document.getElementById('payBtn');
+      payBtn.disabled = !(location && /^07\d{8}$/.test(phone));
+    }
+
+    document.getElementById('deliveryLocation').addEventListener('input', validateForm);
+    document.getElementById('phoneNumber').addEventListener('input', validateForm);
+
+    // Payment simulation logic
+    const loaderOverlay = document.getElementById('loaderOverlay');
+    const paymentModal = document.getElementById('paymentModal');
+    const modalIcon = document.getElementById('modalIcon');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalMsg = document.getElementById('modalMsg');
+    const modalCloseBtn = document.getElementById('modalCloseBtn');
+
+    document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      loaderOverlay.classList.remove('hidden');
+      loaderOverlay.classList.add('flex');
+      // Simulate payment delay
+      setTimeout(() => {
+        loaderOverlay.classList.add('hidden');
+        loaderOverlay.classList.remove('flex');
+        // Random outcome: 70% success, 30% failure
+        const isSuccess = Math.random() < 0.7;
+        if (isSuccess) {
+          modalIcon.textContent = "✅";
+          modalTitle.textContent = "Payment Successful!";
+          modalMsg.textContent = "Thank you for your purchase. Redirecting to your order...";
+          paymentModal.showModal();
+          setTimeout(() => {
+            paymentModal.close();
+            window.location.href = "orders.html";
+          }, 2000);
+        } else {
+          modalIcon.textContent = "❌";
+          modalTitle.textContent = "Payment Failed";
+          modalMsg.textContent = "Please try again. Your payment could not be processed.";
+          paymentModal.showModal();
+        }
+      }, 3000);
+    });
+
+    modalCloseBtn.addEventListener('click', function() {
+      paymentModal.close();
+    });
+
+    // Initial render
+    renderOrderSummary();
+    validateForm();
+  </script>
 </body>
 </html>
