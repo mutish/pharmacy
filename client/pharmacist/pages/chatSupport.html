@@ -1,11 +1,270 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="pastel">
 <head>
   <meta charset="UTF-8">
-  <title>Chat Support</title>
-  <link rel="stylesheet" href="../assets/styles.css">
+  <title>Chat Support | Pharmacist Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
-<body>
-  <h1>Live Chat Support</h1>
+<body class="bg-base-100 min-h-screen flex">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
+    <div class="flex items-center justify-between px-2 py-4 border-b border-base-300">
+      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Medicare</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-2 mt-4">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Dashboard">
+        <i class="fa-solid fa-house-chimney text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Dashboard</span>
+      </a>
+      <a href="prescriptions.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Prescriptions">
+        <i class="fa-solid fa-file-prescription text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Prescriptions</span>
+      </a>
+      <a href="orders.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Orders">
+        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Orders</span>
+      </a>
+      <a href="stock.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Stock">
+        <i class="fa-solid fa-pills text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Stock</span>
+      </a>
+      <a href="profile.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Profile">
+        <i class="fa-solid fa-user-doctor text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Profile</span>
+      </a>
+      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Logout">
+        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
+        <span class="sidebar-label hidden md:inline text-error">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare Pharmacy</a>
+      <div class="flex items-center gap-4">
+        <div class="indicator">
+          <span class="indicator-item badge badge-warning">2</span>
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <div class="indicator">
+          <span class="indicator-item badge badge-success">3</span>
+          <button class="btn btn-ghost text-xl bg-primary text-white rounded-full" title="Messages">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="#">Profile</a></li>
+            <li><a href="/client/index.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Chat Layout -->
+    <div class="container mx-auto px-2 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 h-[70vh]">
+        <!-- Inbox Sidebar -->
+        <div class="card bg-base-100 shadow-md p-4 flex flex-col gap-4 md:max-w-xs h-full">
+          <input type="text" id="chatSearch" class="input input-bordered w-full mb-2" placeholder="Search user..." />
+          <div id="chatList" class="flex-1 overflow-y-auto">
+            <!-- JS will render chat previews here -->
+          </div>
+        </div>
+        <!-- Chat Window -->
+        <div class="md:col-span-2 card bg-base-100 shadow-md flex flex-col h-full">
+          <div id="chatHeader" class="sticky top-0 bg-base-100 p-4 border-b flex items-center gap-3">
+            <!-- JS will render chat header here -->
+          </div>
+          <div id="chatMessages" class="flex-1 overflow-y-auto px-4 py-2 flex flex-col gap-2">
+            <!-- JS will render chat messages here -->
+          </div>
+          <form id="chatInputBar" class="flex items-center gap-2 p-4 border-t bg-base-100">
+            <button type="button" class="btn btn-ghost text-xl"><i class="fa-regular fa-face-smile"></i></button>
+            <input type="text" id="chatInput" class="input input-bordered flex-1" placeholder="Type your message..." autocomplete="off" />
+            <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dummy chat previews
+    const chats = [
+      {
+        id: 1,
+        user: "Jane Doe",
+        avatar: "/client/assets/images/user-avatar.jpg",
+        lastMsg: "Thank you for the update!",
+        timestamp: "2 min ago",
+        unread: 2,
+        online: true,
+        messages: [
+          { from: "user", text: "Hi, is my prescription ready?", time: "09:00" },
+          { from: "pharmacist", text: "Yes, you can pick it up today.", time: "09:02" },
+          { from: "user", text: "Thank you for the update!", time: "09:03" }
+        ]
+      },
+      {
+        id: 2,
+        user: "John Smith",
+        avatar: "/client/assets/images/user-avatar.jpg",
+        lastMsg: "Can I get a refill?",
+        timestamp: "10 min ago",
+        unread: 1,
+        online: false,
+        messages: [
+          { from: "user", text: "Can I get a refill?", time: "08:50" },
+          { from: "pharmacist", text: "Sure, please upload your prescription.", time: "08:52" }
+        ]
+      },
+      {
+        id: 3,
+        user: "Mary Wanjiku",
+        avatar: "/client/assets/images/user-avatar.jpg",
+        lastMsg: "Thanks!",
+        timestamp: "1 hour ago",
+        unread: 0,
+        online: true,
+        messages: [
+          { from: "user", text: "Thanks!", time: "08:00" }
+        ]
+      }
+    ];
+
+    let selectedChatIdx = 0;
+
+    function renderChatList() {
+      const chatList = document.getElementById('chatList');
+      const searchVal = document.getElementById('chatSearch').value.trim().toLowerCase();
+      chatList.innerHTML = '';
+      chats.forEach((chat, idx) => {
+        if (searchVal && !chat.user.toLowerCase().includes(searchVal)) return;
+        const preview = document.createElement('div');
+        preview.className = `flex items-center gap-3 p-2 rounded cursor-pointer hover:bg-green-50 transition-all ${selectedChatIdx === idx ? 'bg-green-100' : ''}`;
+        preview.innerHTML = `
+          <div class="avatar">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="${chat.avatar}" alt="${chat.user}" />
+            </div>
+          </div>
+          <div class="flex-1">
+            <div class="font-semibold ${chat.unread ? 'text-success' : 'text-primary'}">${chat.user}</div>
+            <div class="text-xs text-gray-500 truncate max-w-[120px]">${chat.lastMsg}</div>
+          </div>
+          <div class="flex flex-col items-end gap-1">
+            <span class="text-xs text-gray-400">${chat.timestamp}</span>
+            ${chat.unread ? `<span class="badge badge-success">${chat.unread}</span>` : ''}
+          </div>
+        `;
+        preview.onclick = () => {
+          selectedChatIdx = idx;
+          renderChatList();
+          renderChatHeader();
+          renderChatMessages();
+        };
+        chatList.appendChild(preview);
+      });
+    }
+
+    function renderChatHeader() {
+      const chat = chats[selectedChatIdx];
+      const chatHeader = document.getElementById('chatHeader');
+      chatHeader.innerHTML = `
+        <div class="avatar">
+          <div class="w-10 rounded-full border-2 border-primary">
+            <img src="${chat.avatar}" alt="${chat.user}" />
+          </div>
+        </div>
+        <div>
+          <div class="font-bold text-lg text-primary">${chat.user}</div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs ${chat.online ? 'text-success' : 'text-gray-400'}">
+              <i class="fa-solid fa-circle"></i> ${chat.online ? 'Online' : 'Offline'}
+            </span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderChatMessages() {
+      const chat = chats[selectedChatIdx];
+      const chatMessages = document.getElementById('chatMessages');
+      chatMessages.innerHTML = '';
+      chat.messages.forEach(msg => {
+        const bubble = document.createElement('div');
+        if (msg.from === "pharmacist") {
+          bubble.className = "chat chat-end";
+          bubble.innerHTML = `
+            <div class="chat-bubble bg-primary text-white">${msg.text}</div>
+            <div class="text-xs text-right text-gray-400 mt-1">${msg.time}</div>
+          `;
+        } else {
+          bubble.className = "chat chat-start";
+          bubble.innerHTML = `
+            <div class="chat-bubble bg-base-200">${msg.text}</div>
+            <div class="text-xs text-left text-gray-400 mt-1">${msg.time}</div>
+          `;
+        }
+        chatMessages.appendChild(bubble);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    document.getElementById('chatSearch').addEventListener('input', renderChatList);
+
+    document.getElementById('chatInputBar').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if (!text) return;
+      chats[selectedChatIdx].messages.push({ from: "pharmacist", text, time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) });
+      chats[selectedChatIdx].unread = 0;
+      input.value = "";
+      renderChatMessages();
+      renderChatList();
+    });
+
+    // Initial render
+    renderChatList();
+    renderChatHeader();
+    renderChatMessages();
+
+    // Sidebar toggle logic
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    sidebarToggle.addEventListener('click', function() {
+      if (sidebar.classList.contains('md:w-64')) {
+        sidebar.classList.remove('md:w-64');
+        sidebar.classList.add('w-16');
+        mainContent.classList.remove('md:ml-64');
+        mainContent.classList.add('ml-16');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
+      } else {
+        sidebar.classList.remove('w-16');
+        sidebar.classList.add('md:w-64');
+        mainContent.classList.remove('ml-16');
+        mainContent.classList.add('md:ml-64');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
+      }
+    });
+  </script>
 </body>
 </html>
