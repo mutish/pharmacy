@@ -433,9 +433,10 @@
                     `;
                 });
 
-                // Save for search
-                window.allOrders = orders;
-                window.allPrescriptions = prescriptions;
+    // Handle error or show fallback UI
+    console.error('Failed to fetch dashboard stats:', err);
+    alert('Failed to load dashboard data. Please check the console for details or try again later.');
+}
             } catch (err) {
                 // Handle error or show fallback UI
                 //window.open ('/client/pages/404.html')
