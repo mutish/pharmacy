@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pharmacist Dashboard | Medicare Pharmacy</title>
+
+  
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-base-100 min-h-screen flex">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
+    <div class="flex items-center justify-between px-2 py-4 border-b border-base-300">
+      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Medicare</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-2 mt-4">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Dashboard">
+        <i class="fa-solid fa-house-chimney text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Dashboard</span>
+      </a>
+      <a href="prescriptions.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Prescriptions">
+        <i class="fa-solid fa-file-prescription text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Prescriptions</span>
+      </a>
+      <a href="orders.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Orders">
+        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Orders</span>
+      </a>
+      <a href="stock.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Stock">
+        <i class="fa-solid fa-pills text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Stock</span>
+      </a>
+      <a href="profile.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Profile">
+        <i class="fa-solid fa-user-doctor text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Profile</span>
+      </a>
+      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Logout">
+        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
+        <span class="sidebar-label hidden md:inline text-error">Logout</span>
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <a href="#" class="btn btn-ghost text-xl font-bold text-primary">Medicare Pharmacy</a>
+      <div class="flex items-center gap-4">
+        <!-- Messages Icon with badge -->
+        <div class="indicator">
+          <span class="indicator-item badge badge-error">3</span>
+          <button class="btn btn-ghost text-xl" title="Messages">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+        <!-- Notifications Bell with badge -->
+        <div class="indicator">
+          <span class="indicator-item badge badge-warning">2</span>
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <!-- Pharmacist Avatar Dropdown -->
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="profile.html">View Profile</a></li>
+            <li><a href="/client/index.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Dashboard Grid -->
+    <div class="container mx-auto px-2 py-8">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Stock Overview Card -->
+        <div class="card bg-base-100 shadow-md p-6 flex flex-col gap-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">📦</span>
+            <span class="card-title text-primary font-bold">Stock Overview</span>
+          </div>
+          <div class="text-lg font-semibold">Total Medicines: <span class="text-success">120</span></div>
+          <div class="mb-2">
+            <span class="badge badge-warning mr-2">Low Stock: Paracetamol (5 left)</span>
+            <span class="badge badge-error">Low Stock: Amoxicillin (2 left)</span>
+          </div>
+          <a href="manageStock.html" class="btn btn-outline btn-sm w-fit transition-all duration-200 mt-2">Manage Stock</a>
+        </div>
+
+        <!-- Pending Prescriptions Card -->
+        <div class="card bg-base-100 shadow-md p-6 flex flex-col gap-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">💊</span>
+            <span class="card-title text-primary font-bold">Pending Prescriptions</span>
+            <span class="badge badge-info ml-auto">4</span>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Patient</th>
+                  <th>Date</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>RX1001</td>
+                  <td>Jane Doe</td>
+                  <td>2024-06-01</td>
+                  <td><a href="reviewPrescription.html?id=RX1001" class="btn btn-primary btn-xs">Review</a></td>
+                </tr>
+                <tr>
+                  <td>RX1002</td>
+                  <td>John Smith</td>
+                  <td>2024-06-02</td>
+                  <td><a href="reviewPrescription.html?id=RX1002" class="btn btn-primary btn-xs">Review</a></td>
+                </tr>
+                <tr>
+                  <td>RX1003</td>
+                  <td>Mary Wanjiku</td>
+                  <td>2024-06-03</td>
+                  <td><a href="reviewPrescription.html?id=RX1003" class="btn btn-primary btn-xs">Review</a></td>
+                </tr>
+                <tr>
+                  <td>RX1004</td>
+                  <td>Ali Mwangi</td>
+                  <td>2024-06-03</td>
+                  <td><a href="reviewPrescription.html?id=RX1004" class="btn btn-primary btn-xs">Review</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Incoming Orders Card -->
+        <div class="card bg-base-100 shadow-md p-6 flex flex-col gap-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-2xl">🧾</span>
+            <span class="card-title text-primary font-bold">Incoming Orders</span>
+          </div>
+          <div class="text-lg font-semibold">New Orders: <span class="badge badge-info">5</span></div>
+          <a href="orders.html" class="btn btn-outline btn-sm w-fit transition-all duration-200 mt-2">View Orders</a>
+        </div>
+      </div>
+
+      <!-- Notifications Sidebar/Widget -->
+      <div class="max-w-xl mx-auto mt-10">
+        <div class="card bg-base-100 shadow-md p-6">
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-2xl">🔔</span>
+            <span class="card-title text-primary font-bold">Recent Notifications</span>
+          </div>
+          <ul class="flex flex-col gap-3 mb-4">
+            <li class="alert alert-info flex items-center gap-2 py-2 px-3">
+              <span class="font-semibold">System Update</span>
+              <span class="ml-2 text-gray-500 text-sm">New feature: Prescription OCR enabled.</span>
+              <span class="badge badge-info ml-auto">New</span>
+            </li>
+            <li class="alert alert-success flex items-center gap-2 py-2 px-3">
+              <span class="font-semibold">Order #CO123456</span>
+              <span class="ml-2 text-gray-500 text-sm">Ready for pickup.</span>
+              <span class="badge badge-success ml-auto">Delivered</span>
+            </li>
+            <li class="alert alert-warning flex items-center gap-2 py-2 px-3">
+              <span class="font-semibold">Low Stock</span>
+              <span class="ml-2 text-gray-500 text-sm">Amoxicillin running low.</span>
+              <span class="badge badge-warning ml-auto">Alert</span>
+            </li>
+          </ul>
+          <a href="notifications.html" class="btn btn-outline btn-primary w-full transition-all duration-200">View All</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Sidebar toggle logic
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    sidebarToggle.addEventListener('click', function() {
+      if (sidebar.classList.contains('md:w-64')) {
+        sidebar.classList.remove('md:w-64');
+        sidebar.classList.add('w-16');
+        mainContent.classList.remove('md:ml-64');
+        mainContent.classList.add('ml-16');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
+      } else {
+        sidebar.classList.remove('w-16');
+        sidebar.classList.add('md:w-64');
+        mainContent.classList.remove('ml-16');
+        mainContent.classList.add('md:ml-64');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
+      }
+    });
+   
+  </script>
+</body>
+</html>
+</body>
+</html>
