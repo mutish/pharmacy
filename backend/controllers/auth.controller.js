@@ -5,7 +5,7 @@ import generateTokenAndSetCookie from '../utils/generateToken.js';
 
 export const signup = async (req, res) => {
     try {
-        const { fullname, email, password,confirmPassword, gender, telno, address }= req.body;
+        const { fullname, email, password,confirmPassword, gender  }= req.body;
 
         if(password !== confirmPassword){
             return res.status(400).json({error:"Passwords don't match"})
@@ -36,8 +36,6 @@ export const signup = async (req, res) => {
             password: hashedPassword,
             gender,
             profilePic: gender === "male" ? boyProfilePic : girlProfilePic,
-            telno,
-            address,
             role
         })
 
@@ -76,6 +74,7 @@ export const login = async (req, res) => {
         // Generate JWT and set cookie
         generateTokenAndSetCookie(user._id, res);
 
+        console.log("User login successfully. Welcome to the system");
         res.status(200).json({
                 _id: user._id,
                 fullname: user.fullname,
@@ -93,6 +92,7 @@ export const login = async (req, res) => {
 export const logout = (req, res) => {
     try {
         res.cookie("jwt","", { maxAge:0 });
+        console.log("Logout successful");
         res.status(200).json({message:"User logged out successfully"});
     } catch (error) {
         console.log("Error in logout controller", error.message);
@@ -108,4 +108,36 @@ export const getAllUsers = async (req, res) => {
         console.log("Error in getAllUsers controller", error.message);
         res.status(500).json({error:"Internal server error"});
     };
+};
+
+// Get user profile
+export const getUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Server error", error: err.message });
+  }
+};
+
+// Update user profile
+export const updateUserProfile = async (req, res) => {
+  try {
+    const updates = req.body;
+    const user = await User.findByIdAndUpdate(req.user.id, updates, { new: true }).select("-password");
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json({ message: "Update failed", error: err.message });
+  }
+};
+
+// Delete user account
+export const deleteUserAccount = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.user.id);
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete failed", error: err.message });
+  }
 };

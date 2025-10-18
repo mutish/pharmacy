@@ -52,19 +52,17 @@
     </div>
     <div class="flex-none">
       <div class="dropdown dropdown-end">
+        <!-- Fetch from database -->
         <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
           <div class="indicator">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /> </svg>
             <span class="badge badge-sm indicator-item">10</span>
           </div>
         </div>
-        
         <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
           <div class="card-body">
-            <span class="text-lg font-bold">10 Items</span>
-            <span class="text-info">Subtotal: $999</span>
             <div class="card-actions">
-              <button class="btn btn-primary btn-block">View cart</button>
+              <button class="btn btn-primary btn-block"><a href="../patient/pages/cart.html">View cart</a></button>
             </div>
           </div>
         </div>
@@ -73,17 +71,16 @@
       <div class="dropdown dropdown-end">
         <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
           <div class="w-10 rounded-full">
-            <img alt="User avatar" src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+            <img id="userAvatar" alt="User avatar" src="default.jpg" />
           </div>
         </div>
         <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
           <li>
-            <a class="justify-between">
+            <a  href="../patient/pages/profile.html" class="justify-between">
               Profile
-              <span class="badge">New</span>
             </a>
           </li>
-          <li><a href="/client/auth/loginUser.html">Login</a></li>
+          <li><a href="../patient/auth/loginUser.html" id="logoutBtn">Logout</a></li>
         </ul>
       </div>
     </div>
@@ -98,22 +95,8 @@
     </div>
   </section>
 
-  <!-- Category Section -->
-  <section class="container mx-auto mb-12 animate-fadein">
-    <h2 class="text-2xl font-bold mb-4 text-primary">Shop by Category</h2>
-    <div class="category-scroll">
-      <div class="category-card">Bone & Joint</div>
-      <div class="category-card">Diabetes</div>
-      <div class="category-card">Kidney</div>
-      <div class="category-card">Heart</div>
-      <div class="category-card">Skin Care</div>
-      <div class="category-card">Vitamins</div>
-      <div class="category-card">Allergy</div>
-      <div class="category-card">Cold & Flu</div>
-      <div class="category-card">Digestive Health</div>
-    </div>
-  </section>
 
+  <!-- FETCH FROM DATABASE -->
   <!-- Today's Best Deals -->
   <section id="products" class="container mx-auto mb-16 animate-fadein">
     <h2 class="text-2xl font-bold mb-6 text-primary">Today's Best Deals</h2>
@@ -232,7 +215,7 @@
     </div>
   </footer>
 
-  <!-- Floating Chat Button -->
+  <!-- Floating Chat Button open a modal for a chatroom-->
   <button class="chat-btn" title="Chat with us">
     <i class="fas fa-comment-dots"></i>
   </button>
@@ -241,6 +224,39 @@
   <script src="app.js"></script>
   <script src="https://unpkg.com/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   <script>
+    // Set user avatar from localStorage
+    (() => {
+      try {
+      //   const user = JSON.parse(localStorage.getItem('user'));
+      //   const avatarEl = document.getElementById('userAvatar');
+      //   if (avatarEl && user && user.profilePic) {
+      //     avatarEl.src = user.profilePic;
+      //     // Debug: log the profilePic URL
+      //     console.log('Loaded user avatar:', user.profilePic);
+      //   } else {
+      //     // Debug: log why avatar is not set
+      //     console.log('Avatar not set. user:', user, 'avatarEl:', avatarEl);
+      //   }
+      // } catch (e) {
+      //   // fallback: do nothing
+      //   console.log('Error loading avatar:', e);
+      // }
+      const userData = localStorage.getItem('user');
+      if (userData) {
+        const user = JSON.parse(userData);
+        const avatarEl = document.getElementById('userAvatar');
+        if (avatarEl && user && user.profilePic) {
+          avatarEl.src = user.profilePic;
+          console.log('Loaded user avatar:', user.profilePic);
+        } else {
+          console.log('Avatar not set. user:', user, 'avatarEl:', avatarEl);
+        } 
+      }
+    } catch (e) {
+      console.log('Error loading avatar:', e);
+    }
+    })();
+
     // Testimonial carousel logic
     const slides = document.getElementById('testimonialSlides');
     const totalSlides = slides.children.length;

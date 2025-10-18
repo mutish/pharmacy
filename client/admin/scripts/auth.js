@@ -13,7 +13,8 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
     });
     const data = await res.json();
     if (res.ok) {
-      window.location.href = '/client/index.html'; // Redirect on success
+      //logic for 
+      window.location.href = '/client/admin/pages/adminDashboard.html'; // Redirect on success
     } else {
       alert(data.error || 'Login failed');
     }
@@ -42,7 +43,7 @@ document.getElementById('signupForm')?.addEventListener('submit', async function
     });
     const data = await res.json();
     if (res.ok) {
-      window.location.href = '/client/index.html'; // Redirect on success
+      window.location.href = '/client/patient/home.html'; // Redirect on success
     } else {
       alert(data.error || 'Signup failed');
     }

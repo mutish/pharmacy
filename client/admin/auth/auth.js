@@ -13,7 +13,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
     });
     const data = await res.json();
     if (res.ok) {
-      window.location.href = '/client/index.html'; // Redirect on success
+      window.location.href = '/client/admin/pages/adminDashboard.html'; // Redirect on success
     } else {
       alert(data.error || 'Login failed');
     }
@@ -42,7 +42,7 @@ document.getElementById('signupForm')?.addEventListener('submit', async function
     });
     const data = await res.json();
     if (res.ok) {
-      window.location.href = '/client/index.html'; // Redirect on success
+      window.location.href = '/client/admin/auth/loginAdmin.html'; // Redirect on success
     } else {
       alert(data.error || 'Signup failed');
     }
@@ -61,7 +61,7 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
     });
     const data = await res.json();
     if (res.ok) {
-      window.location.href = '/client/auth/loginUser.html'; // Redirect to login
+      window.location.href = '/client/admin/auth/loginAdmin.html'; // Redirect to login
     } else {
       alert(data.error || 'Logout failed');
     }

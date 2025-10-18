@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import path from 'path';
 
 import authRoutes from './routes/auth.routes.js';
 import messageRoutes from './routes/message.routes.js';
@@ -10,6 +11,7 @@ import productRoutes from './routes/product.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import checkoutRoutes from './routes/checkout.routes.js';
+import mpesaRoutes from './routes/mpesa.routes.js';
 
 
 import connectToMongoDB from './config/connectToMongoDB.js';
@@ -31,9 +33,8 @@ app.use(cors({
 app.use(express.json()); //parse incoming requests with JSON payloads.(from req.body)
 app.use(cookieParser());
 
-// Optionally serve static files (if you want to host client from backend)
-// import path from 'path';
-// app.use(express.static(path.join(process.cwd(), 'client', 'dist')));
+// Serve uploaded files (e.g., /uploads/prescriptions/...)
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
@@ -42,6 +43,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/cart",cartRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/checkout", checkoutRoutes);
+app.use("/api/mpesa",mpesaRoutes);
 
 
   

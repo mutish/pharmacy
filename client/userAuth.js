@@ -1,5 +1,5 @@
-// Login
-document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
+// LOGIN HANDLER
+document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
   e.preventDefault();
   const email = document.getElementById('email').value;
   const password = document.getElementById('password').value;
@@ -12,19 +12,28 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-    if (res.ok) {
-      //store token and user details locally
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('user', JSON.stringify(data.user));
 
-      alert('Login successful');
-      window.location.href = '/client/patient/home.html'; // Redirect on success
-    } else {
-      alert(data.error || 'Login failed');
+    if (!res.ok) throw new Error(data.error || 'Login failed');
+
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+
+    alert(`Welcome back, ${data.user.fullname}!`);
+
+    // 🧠 Role-based redirection
+    switch (data.user.role) {
+      case 'admin':
+        window.location.href = '/client/admin/pages/adminDashboard.html';
+        break;
+      case 'pharmacist':
+        window.location.href = '/client/pharmacist/dashboard.html';
+        break;
+      default:
+        window.location.href = '/client/patient/home.html';
     }
+
   } catch (err) {
-    console.error("Error in logging in:", err.message);
-    alert('Something went wrong. Try again!');
+    alert(err.message);
   }
 });
 
@@ -65,7 +74,7 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
     });
     const data = await res.json();
     if (res.ok) {
-      window.location.href = '/client/patient/auth/loginUser.html'; // Redirect to login
+      window.location.href = '/client/auth/loginUser.html'; // Redirect to login
     } else {
       alert(data.error || 'Logout failed');
     }
