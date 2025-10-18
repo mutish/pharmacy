@@ -2,8 +2,7 @@ import mongoose from "mongoose";
 
 const cartSchema = new mongoose.Schema({
     cartId: {
-        type: String,
-        required: true
+        type: String
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,

@@ -82,10 +82,10 @@
           <label class="label font-semibold" for="phone">Phone Number</label>
           <input type="tel" id="phone" class="input input-bordered w-full" required pattern="^07\\d{8}$">
         </div>
-        <div class="form-control">
+        <!-- <div class="form-control">
           <label class="label font-semibold" for="address">Delivery Address</label>
           <input type="text" id="address" class="input input-bordered w-full" required>
-        </div>
+        </div> -->
         <div class="flex gap-4 mt-4">
           <button type="submit" class="btn btn-primary flex-1 transition-all duration-200">Save Changes</button>
           <button type="button" id="deleteBtn" class="btn btn-error flex-1 transition-all duration-200">Delete Account</button>
@@ -94,72 +94,72 @@
     </div>
   </div>
 
-  <script>
-    // Dummy user data
-    let user = {
-      profilePic: "/client/assets/images/user-avatar.jpg",
-      username: "Jane Doe",
-      email: "jane.doe@email.com",
-      phone: "0712345678",
-      address: "123 Main Street, Nairobi"
-    };
+  <script src="../scripts/profile.js">
+    // // // Dummy user data
+    // // let user = {
+    // //   profilePic: "/client/assets/images/user-avatar.jpg",
+    // //   username: "Jane Doe",
+    // //   email: "jane.doe@email.com",
+    // //   phone: "0712345678",
+    // //   address: "123 Main Street, Nairobi"
+    // // };
 
-    // Render user info
-    function renderProfile() {
-      document.getElementById('profilePic').src = user.profilePic || "/client/assets/images/user-avatar.jpg";
-      document.getElementById('profileName').textContent = user.username;
-      document.getElementById('profileEmail').textContent = user.email;
-      document.getElementById('username').value = user.username;
-      document.getElementById('email').value = user.email;
-      document.getElementById('phone').value = user.phone;
-      document.getElementById('address').value = user.address;
-    }
+    // // Render user info
+    // function renderProfile() {
+    //   const user = JSON.parse(localStorage.getItem('user'));
+    //   if (user) {
+    //     document.getElementById('profilePic').src = user.profilePic;
+    //     document.getElementById('username').value = user.fullname;
+    //     document.getElementById('email').value = user.email;
+    //   }
+      
+    // }
 
-    // Toast logic
-    function showToast(msg, type = "success") {
-      const toast = document.getElementById('toast');
-      const toastMsg = document.getElementById('toastMsg');
-      toastMsg.textContent = msg;
-      toastMsg.className = "alert shadow-lg transition-all duration-300 " + (type === "success" ? "alert-success" : "alert-error");
-      toast.classList.remove("hidden");
-      toast.classList.add("animate-fadein");
-      setTimeout(() => {
-        toast.classList.add("hidden");
-        toast.classList.remove("animate-fadein");
-      }, 2000);
-    }
+    // // Toast logic
+    // function showToast(msg, type = "success") {
+    //   const toast = document.getElementById('toast');
+    //   const toastMsg = document.getElementById('toastMsg');
+    //   toastMsg.textContent = msg;
+    //   toastMsg.className = "alert shadow-lg transition-all duration-300 " + (type === "success" ? "alert-success" : "alert-error");
+    //   toast.classList.remove("hidden");
+    //   toast.classList.add("animate-fadein");
+    //   setTimeout(() => {
+    //     toast.classList.add("hidden");
+    //     toast.classList.remove("animate-fadein");
+    //   }, 2000);
+    // }
 
-    // Save changes
-    document.getElementById('profileForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      user.username = document.getElementById('username').value.trim();
-      user.email = document.getElementById('email').value.trim();
-      user.phone = document.getElementById('phone').value.trim();
-      user.address = document.getElementById('address').value.trim();
-      renderProfile();
-      showToast("✅ Profile updated successfully.", "success");
-    });
+    // // Save changes
+    // document.getElementById('profileForm').addEventListener('submit', function(e) {
+    //   e.preventDefault();
+    //   user.username = document.getElementById('username').value.trim();
+    //   user.email = document.getElementById('email').value.trim();
+    //   user.phone = document.getElementById('phone').value.trim();
+    //   user.address = document.getElementById('address').value.trim();
+    //   renderProfile();
+    //   showToast("✅ Profile updated successfully.", "success");
+    // });
 
-    // Delete account modal logic
-    const deleteModal = document.getElementById('deleteModal');
-    document.getElementById('deleteBtn').onclick = function() {
-      deleteModal.showModal();
-    };
-    document.getElementById('cancelDeleteBtn').onclick = function(e) {
-      e.preventDefault();
-      deleteModal.close();
-    };
-    document.getElementById('confirmDeleteBtn').onclick = function(e) {
-      e.preventDefault();
-      deleteModal.close();
-      showToast("⚠️ Account deleted successfully", "error");
-      setTimeout(() => {
-        window.location.href = "/client/index.html";
-      }, 2000);
-    };
+    // // Delete account modal logic
+    // const deleteModal = document.getElementById('deleteModal');
+    // document.getElementById('deleteBtn').onclick = function() {
+    //   deleteModal.showModal();
+    // };
+    // document.getElementById('cancelDeleteBtn').onclick = function(e) {
+    //   e.preventDefault();
+    //   deleteModal.close();
+    // };
+    // document.getElementById('confirmDeleteBtn').onclick = function(e) {
+    //   e.preventDefault();
+    //   deleteModal.close();
+    //   showToast("⚠️ Account deleted successfully", "error");
+    //   setTimeout(() => {
+    //     window.location.href = "/client/index.html";
+    //   }, 2000);
+    // };
 
-    // Initial render
-    renderProfile();
+    // // Initial render
+    // renderProfile();
   </script>
 </body>
 </html>

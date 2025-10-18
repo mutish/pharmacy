@@ -3,7 +3,8 @@ import mongoose from "mongoose";
 const orderSchema = new mongoose.Schema({
     orderId: {
         type: String,
-        required: true
+        unique: true
+        // removed required: true because it's auto-generated in pre('save')
     },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -11,11 +12,15 @@ const orderSchema = new mongoose.Schema({
         required: true
     },
     location:{
-        type: mongoose.Schema.Types.String,
-        ref: "User",
+        type: String,
         required: true
     },
-    totalAmount: {
+    deliveryFee: {
+        type: Number,
+        default: 150,
+        min: 0
+    },
+    total: {
         type: Number,
         required: true
     },
@@ -24,7 +29,7 @@ const orderSchema = new mongoose.Schema({
         enum: ["pending", "completed", "failed"],
         default: "pending"
     },
-    orderStatus: {
+    status: {
         type: String,
         enum: ["placed", "processing", "shipped", "delivered", "cancelled"],
         default: "placed"
@@ -47,8 +52,15 @@ const orderSchema = new mongoose.Schema({
             }
         }
     ],
-
 }, {timestamps: true});
+
+// Backward compatibility virtuals (old field names)
+orderSchema.virtual("totalAmount").get(function() {
+  return this.total;
+});
+orderSchema.virtual("orderStatus").get(function() {
+  return this.status;
+});
 
 orderSchema.pre("save", function(next) {
   if (this.isNew && !this.orderId) {

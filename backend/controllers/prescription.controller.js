@@ -228,7 +228,8 @@ export const verifyPrescription = async (req, res) => {
 // Get all prescriptions
 export const getAllPrescriptions = async (req, res) => {
   try {
-    const prescriptions = await Prescription.find().populate('user', 'fullname email');
+    const prescriptions = await Prescription.find()
+      .populate('user', 'fullname email'); // virtual 'user' from schema
     res.status(200).json(prescriptions);
   } catch (error) {
     console.log("Error in getAllPrescriptions controller", error.message);

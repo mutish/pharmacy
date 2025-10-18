@@ -1,160 +1,82 @@
-import Order from '../models/order.model.js';
+// checkout.controller.js
 import Checkout from '../models/checkout.model.js';
-import Product from '../models/product.model.js';
-import getMpesaToken from '../utils/mpesaToken.js';
-import axios from 'axios';
-import nodemailer from 'nodemailer';
+import Order from '../models/order.model.js';
 
-// Initiate M-Pesa STK Push and save checkout record
-export const initiateMpesaPayment = async (req, res) => {
-    try {
-        const { orderId, phoneNumber } = req.body;
-        const order = await Order.findById(orderId);
-        if (!order) return res.status(404).json({ error: "Order not found" });
+// ✅ Create a checkout (pre-payment)
+export const createCheckout = async (req, res) => {
+  try {
+    const { orderId, phoneNumber, deliveryAddress } = req.body;
 
-        const deliveryFee = 150;
-        const amount = order.totalAmount + deliveryFee;
-
-        const timestamp = new Date().toISOString().replace(/[-:T.Z]/g, '').slice(0, 14);
-        const password = Buffer.from(
-            process.env.MPESA_PAYBILL + process.env.MPESA_PASSKEY + timestamp
-        ).toString('base64');
-
-        const token = await getMpesaToken();
-
-        const payload = {
-            BusinessShortCode: process.env.MPESA_PAYBILL,
-            Password: password,
-            Timestamp: timestamp,
-            TransactionType: 'CustomerPayBillOnline',
-            Amount: amount,
-            PartyA: phoneNumber,
-            PartyB: process.env.MPESA_PAYBILL,
-            PhoneNumber: phoneNumber,
-            CallBackURL: process.env.MPESA_CALLBACK_URL,
-            AccountReference: order.orderId,
-            TransactionDesc: 'Order Payment'
-        };
-
-        const response = await axios.post(
-            'https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest',
-            payload,
-            {
-                headers: { Authorization: `Bearer ${token}` }
-            }
-        );
-
-        // Log full response for debugging
-        console.log("Mpesa STK Push response:", response.data);
-
-        const checkoutId = `CO${Date.now().toString().slice(-6)}${Math.random().toString(36).substring(2,5).toUpperCase()}`;
-        const { CheckoutRequestID } = response.data;
-        await Checkout.create({
-            checkoutId,
-            checkoutRequestId: CheckoutRequestID,
-            orderId: order._id,
-            userId: order.userId,
-            phoneNumber,
-            amount,
-            status: 'pending'
-        });
-
-        res.status(200).json({
-            message: "STK Push sent, check your phone",
-            checkoutRequestId: CheckoutRequestID
-        });
-
-    } catch (error) {
-        // Log full error response for debugging
-        if (error.response) {
-            console.log("Payment error response:", error.response.data);
-        } else {
-            console.log("Payment error: ", error.message);
-        }
-        res.status(500).json({ message: "Internal Server Error" });
+    // 1️⃣ Validate order
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ error: "Order not found" });
     }
+
+    // 2️⃣ Use delivery fee from order (set by admin)
+    let deliveryFee = 0;
+    if (deliveryAddress === "pick from pharmacy") {
+      deliveryFee = 0;
+    } else {
+      deliveryFee = typeof order.deliveryFee === "number" ? order.deliveryFee : 0;
+    } 
+    const baseAmount = typeof order.totalAmount === "number" ? order.totalAmount : 0;
+    const totalAmount = baseAmount + deliveryFee;
+
+    if (!Number.isFinite(totalAmount) || totalAmount <= 0) {
+      return res.status(400).json({ error: "Invalid order amount or delivery fee" });
+    }
+
+    // 3️⃣ Create checkout record
+    const checkout = await Checkout.create({
+      orderId,
+      userId: order.userId,
+      phoneNumber,
+      deliveryAddress,
+      amount: totalAmount,
+      status: "pending"
+    });
+
+    res.status(201).json({
+      message: "Checkout created successfully. Proceed to payment.",
+      checkout
+    });
+    console.log("Checkout created successfully");
+  } catch (error) {
+    console.error("Error creating checkout:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };
 
-// M-Pesa Callback: update checkout, order, send e-receipt
-export const mpesaCallback = async (req, res) => {
-    try {
-        const { Body } = req.body;
-        const stk = Body.stkCallback;
-
-        // Find checkout record by checkoutRequestId
-        const checkout = await Checkout.findOne({ checkoutRequestId: stk.CheckoutRequestID });
-        if (!checkout) {
-            console.log('Checkout record not found for callback');
-            return res.status(404).json({ error: 'Checkout record not found' });
-        }
-
-        if (stk.ResultCode !== 0) {
-            checkout.status = 'failed';
-            await checkout.save();
-            console.log('Payment failed or cancelled');
-            return res.status(200).json({ message: 'Payment failed' });
-        }
-
-        const metadata = stk.CallbackMetadata.Item.reduce((acc, item) => {
-            acc[item.Name] = item.Value;
-            return acc;
-        }, {});
-
-        // Update checkout record with receipt number and status
-        checkout.receiptNumber = metadata.MpesaReceiptNumber;
-        checkout.amount = metadata.Amount;
-        checkout.status = 'successful';
-        await checkout.save();
-
-        // Update order
-        const order = await Order.findById(checkout.orderId);
-        if (order) {
-            order.paymentStatus = 'completed';
-            order.orderStatus = 'processing';
-            await order.save();
-
-            // Reduce stock for all ordered items
-            for (const item of order.items) {
-                await Product.findByIdAndUpdate(item.productId, {
-                    $inc: { stock: -item.quantity }
-                });
-            }
-
-            // Send e-receipt to user
-            const userEmail = order.userEmail || 'customer@example.com'; // Replace with actual user email if available
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: process.env.MAIL_USER,
-                    pass: process.env.MAIL_PASS
-                }
-            });
-
-            await transporter.sendMail({
-                from: process.env.MAIL_USER,
-                to: userEmail,
-                subject: 'Order Receipt',
-                text: `Payment successful. Transaction ID: ${metadata.MpesaReceiptNumber}, Amount: ${metadata.Amount}`
-            });
-
-            console.log('Payment successful, stock updated, receipt sent');
-        }
-
-        res.status(200).json({ message: 'Payment processed successfully' });
-
-    } catch (error) {
-        console.error('Callback error:', error.message);
-        res.status(500).json({ error: 'Callback processing failed' });
-    }
-};
-
-
+// ✅ Get all checkouts (admin view)
 export const getAllCheckouts = async (req, res) => {
-    try {
-        const checkouts = await Checkout.find().populate('user', 'fullname email');
-        res.status(200).json(checkouts);
-    } catch (error) {
-        console.log("Error in getAllCheckouts controller", error.message);
-        res.status(500).json({error:"Internal server error"});
+  try {
+    const checkouts = await Checkout.find()
+      .populate("userId", "fullname email")
+      .populate("orderId", "orderId totalAmount");
+    console.log("Fetched all checkouts");
+    res.status(200).json(checkouts);
+  } catch (error) {
+    console.error("Error fetching checkouts:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+// ✅ Get single checkout (user or admin)
+export const getCheckoutById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const checkout = await Checkout.findById(id)
+      .populate("userId", "fullname email")
+      .populate("orderId", "orderId totalAmount orderStatus");
+
+    if (!checkout) {
+      return res.status(404).json({ error: "Checkout not found" });
     }
+
+    res.status(200).json(checkout);
+  } catch (error) {
+    console.error("Error fetching checkout:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
 };

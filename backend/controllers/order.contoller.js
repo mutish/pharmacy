@@ -56,7 +56,8 @@ export const createOrder = async (req, res) => {
     const newOrder = new Order({
       orderId,
       userId,
-      location,            // currently referencing User
+      location, 
+      deliveryFee: 150,           // currently referencing User
       totalAmount,
       items: orderItems
     });
