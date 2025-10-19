@@ -1,5 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, resolve } from 'path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Assume .env is in the project root (one level up from backend/)
+const envPath = resolve(__dirname, '..', '.env');
+dotenv.config({ path: envPath });
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import path from 'path';
