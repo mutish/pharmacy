@@ -12,15 +12,13 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-    if (res.ok) {
-      //store token and user details locally
+    if (res.ok && data.token && data.user) {
       localStorage.setItem('token', data.token);
       localStorage.setItem('user', JSON.stringify(data.user));
-
       alert('Login successful');
-      window.location.href = '/client/patient/home.html'; // Redirect on success
+      window.location.href = '/client/patient/home.html';
     } else {
-      alert(data.error || 'Login failed');
+      throw new Error(data.error || 'Login failed');
     }
   } catch (err) {
     console.error("Error in logging in:", err.message);
@@ -45,10 +43,12 @@ document.getElementById('signupForm')?.addEventListener('submit', async function
       body: JSON.stringify({ fullname, email, password, confirmPassword, gender })
     });
     const data = await res.json();
-    if (res.ok) {
+    if (res.ok && data.token && data.user) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       window.location.href = '/client/patient/home.html'; // Redirect on success
     } else {
-      alert(data.error || 'Signup failed');
+      throw new Error(data.error || 'Signup failed');
     }
   } catch (err) {
     alert('Something went wrong. Try again!');
@@ -65,6 +65,8 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
     });
     const data = await res.json();
     if (res.ok) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.location.href = '/client/patient/auth/loginUser.html'; // Redirect to login
     } else {
       alert(data.error || 'Logout failed');

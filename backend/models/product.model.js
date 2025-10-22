@@ -1,5 +1,18 @@
 import mongoose from "mongoose";
 
+const CATEGORY_ENUM = [
+    'Pain and Inflammation',
+    'Respiratory and Allergy Care', 
+    'Digestive Health',
+    'Eye and Ear Care',
+    'Vitamins and Supplements',
+    'Personal Care and Hygiene',
+    'Family Health',
+    'First Aid and Medical Devices',
+    'Foot and Leg Care',
+    'Habit Treatment'
+];
+
 const productSchema = new mongoose.Schema({
     productId:{
         type: String,
@@ -16,18 +29,7 @@ const productSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        enum: [
-            'Pain and Inflammation',
-            'Respiratory and Allergy Care', 
-            'Digestive Health',
-            'Eye and Ear Care',
-            'Vitamins and Supplements',
-            'Personal Care and Hygiene',
-            'Family Health',
-            'First Aid and Medical Devices',
-            'Foot and Leg Care',
-            'Habit Treatment'
-        ]
+        enum: CATEGORY_ENUM
     },
     imageUrl: {
         type: String,
@@ -69,4 +71,5 @@ productSchema.pre("save", function (next) {
 
 const Product = mongoose.model("Product", productSchema);
 
+export { CATEGORY_ENUM }; // new named export
 export default Product;

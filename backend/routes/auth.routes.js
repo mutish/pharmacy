@@ -5,10 +5,11 @@ import {
   logout,
   getUserProfile,
   updateUserProfile,
-  deleteUserAccount
+  deleteUserAccount,
+  getAllUsers
 } from "../controllers/auth.controller.js";
 
-import { protectRoute } from "../middleware/protectRoute.js";
+import { protectRoute, authorize } from "../middleware/protectRoute.js";
 
 const router = express.Router();
 
@@ -22,28 +23,11 @@ router.get("/me", protectRoute, getUserProfile);
 router.patch("/me", protectRoute, updateUserProfile);
 router.delete("/me", protectRoute, deleteUserAccount);
 
+// Admin routes
+router.get("/allusers", protectRoute, authorize("admin"), getAllUsers);
+
+// New: Admin-only user creation (use credentials/cookie)
+import { createUserByAdmin } from "../controllers/auth.controller.js"; // add import at top if needed
+router.post("/create", protectRoute, authorize("admin"), createUserByAdmin);
+
 export default router;
-
-
-
-
-
-
-// import express from 'express';
-// import { login, signup, logout, getAllUsers } from '../controllers/auth.controller.js';
-// import { protectRoute , authorize}  from '../middleware/protectRoute.js';
-
-// const router = express.Router();
-
-// router.post("/signup", signup);
-// router.post("/login", login);
-// router.post("/logout", logout);
-// // Only admin can get all users
-// router.get("/allusers", protectRoute, authorize('admin'), getAllUsers);
-
-// //profile management
-// router.get("/me", protect, getUserProfile);
-// router.patch("/me", protect, updateUserProfile);
-// router.delete("/me", protect, deleteUserAccount);
-
-// export default router;

@@ -46,45 +46,25 @@
 </head>
 <body class="bg-base-100">
   <!-- Navbar -->
-  <div class="navbar bg-base-100 shadow-sm animate-fadein">
-    <div class="flex-1">
-      <a class="btn btn-ghost text-2xl font-bold text-primary tracking-wide">Medicare</a>
-    </div>
-    <div class="flex-none">
+   <nav class="navbar sticky top-0 z-40 bg-base-200 shadow-sm px-4 py-2 flex flex-wrap items-center justify-between">
+    <a href="../home.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+  
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='/client/patient/pages/cart.html'" title="View Cart">&#128722;</button>
       <div class="dropdown dropdown-end">
-        <!-- Fetch from database -->
-        <div tabindex="0" role="button" class="btn btn-ghost btn-circle">
-          <div class="indicator">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" /> </svg>
-            <span class="badge badge-sm indicator-item">10</span>
-          </div>
-        </div>
-        <div tabindex="0" class="card card-compact dropdown-content bg-base-100 z-1 mt-3 w-52 shadow">
-          <div class="card-body">
-            <div class="card-actions">
-              <button class="btn btn-primary btn-block"><a href="../patient/pages/cart.html">View cart</a></button>
+        <label tabindex="0" class="avatar cursor-pointer">
+          <div class="w-10 rounded-full border-2 border-primary">
+              <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
             </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
-          <div class="w-10 rounded-full">
-            <img id="userAvatar" alt="User avatar" src="default.jpg" />
-          </div>
-        </div>
-        <ul tabindex="-1" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
-          <li>
-            <a  href="../patient/pages/profile.html" class="justify-between">
-              Profile
-            </a>
-          </li>
-          <li><a href="../patient/auth/loginUser.html" id="logoutBtn">Logout</a></li>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+          <li><a href="../patient/pages/profile.html">Profile</a></li>
+          <li><a href="../index.html" id="logoutBtn">Logout</a></li>
         </ul>
       </div>
     </div>
-  </div>
+  </nav>
+  
 
   <!-- Hero Section -->
   <section class="container mx-auto hero-bg text-center animate-fadein">
@@ -92,6 +72,8 @@
     <p class="text-xl mb-6">Order medicines, upload prescriptions, and get fast delivery at your doorstep.</p>
     <div class="hero-btns flex justify-center mb-6">
       <a href="/client/patient/pages/uploadPrescription.html" class="btn btn-accent btn-lg btn-cta">Upload Prescription</a>
+      <!-- New: quick link to shop -->
+      <a href="/client/patient/pages/shop.html" class="btn btn-outline btn-lg btn-cta ml-4">Go to Shop</a>
     </div>
   </section>
 
@@ -215,10 +197,10 @@
     </div>
   </footer>
 
-  <!-- Floating Chat Button open a modal for a chatroom-->
+  <!-- Floating Chat Button open a modal for a chatroom
   <button class="chat-btn" title="Chat with us">
     <i class="fas fa-comment-dots"></i>
-  </button>
+  </button> -->
 
   <script src="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/js/all.min.js"></script>
   <script src="app.js"></script>
@@ -227,20 +209,7 @@
     // Set user avatar from localStorage
     (() => {
       try {
-      //   const user = JSON.parse(localStorage.getItem('user'));
-      //   const avatarEl = document.getElementById('userAvatar');
-      //   if (avatarEl && user && user.profilePic) {
-      //     avatarEl.src = user.profilePic;
-      //     // Debug: log the profilePic URL
-      //     console.log('Loaded user avatar:', user.profilePic);
-      //   } else {
-      //     // Debug: log why avatar is not set
-      //     console.log('Avatar not set. user:', user, 'avatarEl:', avatarEl);
-      //   }
-      // } catch (e) {
-      //   // fallback: do nothing
-      //   console.log('Error loading avatar:', e);
-      // }
+      
       const userData = localStorage.getItem('user');
       if (userData) {
         const user = JSON.parse(userData);

@@ -12,10 +12,12 @@ document.getElementById('loginForm')?.addEventListener('submit', async function(
       body: JSON.stringify({ email, password })
     });
     const data = await res.json();
-    if (res.ok) {
+    if (res.ok && data.token && data.user) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('user', JSON.stringify(data.user));
       window.location.href = '/client/pharmacist/dashboard.html'; // Redirect on success
     } else {
-      alert(data.error || 'Login failed');
+      throw new Error(data.error || 'Login failed');
     }
   } catch (err) {
     alert('Network error');
@@ -33,6 +35,8 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
     });
     const data = await res.json();
     if (res.ok) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.location.href = '/client/pharmacist/loginPharmacist.html'; // Redirect to login
     } else {
       alert(data.error || 'Logout failed');

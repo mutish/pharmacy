@@ -30,12 +30,21 @@ const PORT = process.env.PORT || 5000;
 dotenv.config();
 
 // Enable CORS for your client (adjust origin as needed)
+const allowedOrigins = [
+  'http://localhost:5500',
+  'http://127.0.0.1:5500',
+  'http://localhost:5173', // Vite
+  'http://127.0.0.1:5173'
+];
+
 app.use(cors({
-    origin: [
-        'http://localhost:5500',
-        'http://127.0.0.1:5500'
-    ],
-    credentials: true // Allow cookies to be sent
+  origin: (origin, callback) => {
+    // allow requests with no origin (e.g., file://, curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error('CORS policy: This origin is not allowed.'));
+  },
+  credentials: true // Allow cookies to be sent
 }));
 
 app.use(express.json()); //parse incoming requests with JSON payloads.(from req.body)

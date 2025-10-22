@@ -14,6 +14,7 @@ document.getElementById('loginForm')?.addEventListener('submit', async (e) => {
     const data = await res.json();
 
     if (!res.ok) throw new Error(data.error || 'Login failed');
+    if (!data.token || !data.user) throw new Error('Authentication failed');
 
     localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(data.user));
@@ -74,6 +75,8 @@ document.getElementById('logoutBtn')?.addEventListener('click', async function(e
     });
     const data = await res.json();
     if (res.ok) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
       window.location.href = '/client/auth/loginUser.html'; // Redirect to login
     } else {
       alert(data.error || 'Logout failed');
