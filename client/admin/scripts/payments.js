@@ -51,7 +51,7 @@
     pagePayments.forEach((p, idx) => {
       const status = (p.status || '').toString().toLowerCase();
       let statusColor = 'badge-warning';
-      if (status === 'successful' || status === 'successful' || status === 'completed') statusColor = 'badge-success';
+      if (status === 'successful' || status === 'completed') statusColor = 'badge-success';
       if (status === 'failed') statusColor = 'badge-error';
       if (status === 'initiated' || status === 'pending') statusColor = 'badge-info';
 
