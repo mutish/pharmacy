@@ -73,11 +73,32 @@ export const stkPush = async (req, res) => {
       return res.status(400).json({ error: "Invalid amount for this checkout." });
     }
 
-    const token = await getMpesaToken();
-    if (!token) {
-      return res.status(500).json({ error: "Failed to obtain M-Pesa access token." });
+    let token;
+    try {
+      token = await getMpesaToken();
+      if (!token) throw new Error("Empty token");
+    } catch (errToken) {
+      console.error("Mpesa token fetch failed:", errToken.message);
+      // If sandbox, allow a simulated STK so local dev flow continues
+      if ((process.env.MPESA_ENV || "sandbox").toLowerCase() === "sandbox") {
+        console.warn("Proceeding with simulated STK push because token fetch failed (sandbox mode).");
+        // mark checkout as initiated (simulated)
+        checkout.status = "initiated";
+        const simMeta = { simulated: true, reason: errToken.message, timestamp: new Date().toISOString() };
+        checkout.mpesa = { initiatedAt: simMeta.timestamp, meta: simMeta };
+        await checkout.save();
+        return res.status(200).json({
+          message: "Simulated STK push (sandbox) — token fetch failed but flow continued.",
+          simulated: true,
+          simMeta,
+          checkout
+        });
+      }
+      // Not sandbox -> fail hard
+      return res.status(500).json({ error: "Failed to obtain M-Pesa token", details: errToken.message });
     }
 
+    // real STK flow using token
     const timestamp = new Date().toISOString().replace(/[-T:.Z]/g, "").slice(0, 14);
     const password = Buffer.from(
       process.env.MPESA_SHORTCODE + process.env.MPESA_PASSKEY + timestamp
@@ -116,8 +137,9 @@ export const stkPush = async (req, res) => {
 
     const { data } = await axios.post(url, payload, {
       headers: { Authorization: `Bearer ${token}` },
-      timeout: 15000,
+      timeout: 30000,
     });
+    
 
     // Save STK request metadata
     checkout.checkoutRequestId = data.CheckoutRequestID;
@@ -139,40 +161,64 @@ export const mpesaCallback = async (req, res) => {
   try {
     const callbackData = req.body;
 
-    const resultCode = Number(callbackData.Body?.stkCallback?.ResultCode);
-    const checkoutRequestID = callbackData.Body?.stkCallback?.CheckoutRequestID;
+    // ✅ Log raw callback to debug easily
+    console.log("📩 Received M-Pesa Callback:", JSON.stringify(callbackData, null, 2));
+
+    const stkCallback = callbackData?.Body?.stkCallback;
+
+    if (!stkCallback) {
+      console.error("⚠️ Invalid callback structure");
+      return res.status(400).json({ error: "Invalid callback format" });
+    }
+
+    const resultCode = Number(stkCallback.ResultCode);
+    const checkoutRequestID = stkCallback.CheckoutRequestID;
 
     const checkout = await Checkout.findOne({ checkoutRequestId: checkoutRequestID }).populate("orderId");
 
     if (!checkout) {
-      console.log("No checkout found for:", checkoutRequestID);
+      console.log("🚫 No checkout found for:", checkoutRequestID);
       return res.status(404).json({ error: "Checkout not found." });
     }
 
     if (resultCode === 0) {
-      const metadata = callbackData.Body.stkCallback.CallbackMetadata.Item || [];
+      const metadata = stkCallback.CallbackMetadata?.Item || [];
+
       const receipt = metadata.find((item) => item.Name === "MpesaReceiptNumber")?.Value;
       const paidAmount = metadata.find((item) => item.Name === "Amount")?.Value;
+      const phoneNumber = metadata.find((item) => item.Name === "PhoneNumber")?.Value;
+      const datePaid = metadata.find((item) => item.Name === "TransactionDate")?.Value;
 
       checkout.status = "successful";
-      checkout.receiptNumber = receipt;
-      if (paidAmount) checkout.paidAmount = paidAmount;
+      checkout.receiptNumber = receipt || "N/A";
+      checkout.phoneNumber = phoneNumber || checkout.phoneNumber;
+      checkout.transactionDate = datePaid || new Date().toISOString();
+      checkout.paidAmount = paidAmount || checkout.paidAmount;
       await checkout.save();
 
-      // Update order status
-      checkout.orderId.orderStatus = "paid";
-      await checkout.orderId.save();
+      // 🧾 Update order status
+      if (checkout.orderId) {
+        checkout.orderId.orderStatus = "paid";
+        await checkout.orderId.save();
+      }
 
-      console.log("✅ Payment successful for:", receipt);
+      console.log("✅ Payment successful!");
+      console.table({
+        Receipt: receipt,
+        Amount: paidAmount,
+        Phone: phoneNumber,
+        Date: datePaid,
+      });
     } else {
       checkout.status = "failed";
       await checkout.save();
-      console.log("❌ Payment failed for:", checkoutRequestID);
+      console.log("❌ Payment failed | ResultCode:", resultCode, "| CheckoutRequestID:", checkoutRequestID);
     }
 
     res.status(200).json({ message: "Callback processed successfully" });
   } catch (error) {
-    console.error("Callback Error:", error.message);
+    console.error("💥 Callback Error:", error.message);
     res.status(500).json({ error: "Error handling callback" });
   }
 };
+

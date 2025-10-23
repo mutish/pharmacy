@@ -38,11 +38,19 @@
     </div>
     <div class="flex items-center gap-4">
       <button class="btn btn-ghost text-xl" onclick="window.location.href='cart.html'" title="View Cart">&#128722;</button>
+      <!-- Notification Icon -->
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='notifications.html'" title="Notifications">
+        <span class="relative">
+          <i class="fa-solid fa-bell"></i>
+          <span id="notifBadge" class="badge badge-error absolute -top-2 -right-2 text-xs" style="display:none;">!</span>
+        </span>
+      </button>
       <div class="dropdown dropdown-end">
+        
         <label tabindex="0" class="avatar cursor-pointer">
           <div class="w-10 rounded-full border-2 border-primary">
-            <img src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
-          </div>
+              <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+            </div>
         </label>
         <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
           <li><a href="/client/index.html" id="logoutBtn">Logout</a></li>
@@ -60,192 +68,7 @@
     <div id="pagination" class="flex justify-center mt-10 gap-2"></div>
   </div>
 
-  <script>
-    // Sample product data with categories
-    const products = [
-      {
-        id: 1,
-        name: "Paracetamol",
-        desc: "Relieves pain and reduces fever.",
-        price: 120,
-        image: "/client/assets/images/paracetamol.jpg",
-        prescription: false,
-        stock: 12,
-        category: "Pain and Inflammation"
-      },
-      {
-        id: 2,
-        name: "Amoxicillin",
-        desc: "Antibiotic for bacterial infections.",
-        price: 350,
-        image: "/client/assets/images/amoxicillin.jpg",
-        prescription: true,
-        stock: 0,
-        category: "Family Health"
-      },
-      {
-        id: 3,
-        name: "Ibuprofen",
-        desc: "Anti-inflammatory and pain relief.",
-        price: 180,
-        image: "/client/assets/images/ibuprofen.jpg",
-        prescription: false,
-        stock: 8,
-        category: "Pain and Inflammation"
-      },
-      {
-        id: 4,
-        name: "Metformin",
-        desc: "Controls blood sugar for diabetes.",
-        price: 400,
-        image: "/client/assets/images/metformin.jpg",
-        prescription: true,
-        stock: 20,
-        category: "Family Health"
-      },
-      {
-        id: 5,
-        name: "Cetirizine",
-        desc: "Relieves allergy symptoms.",
-        price: 90,
-        image: "/client/assets/images/cetirizine.jpg",
-        prescription: false,
-        stock: 0,
-        category: "Respiratory and Allergy Care"
-      },
-      {
-        id: 6,
-        name: "Losartan",
-        desc: "Treats high blood pressure.",
-        price: 500,
-        image: "/client/assets/images/losartan.jpg",
-        prescription: true,
-        stock: 6,
-        category: "Family Health"
-      },
-      {
-        id: 7,
-        name: "Omeprazole",
-        desc: "Reduces stomach acid.",
-        price: 220,
-        image: "/client/assets/images/omeprazole.jpg",
-        prescription: false,
-        stock: 15,
-        category: "Digestive Health"
-      },
-      {
-        id: 8,
-        name: "Atorvastatin",
-        desc: "Lowers cholesterol.",
-        price: 650,
-        image: "/client/assets/images/atorvastatin.jpg",
-        prescription: true,
-        stock: 0,
-        category: "Family Health"
-      },
-      {
-        id: 9,
-        name: "Vitamin C",
-        desc: "Boosts immunity.",
-        price: 80,
-        image: "/client/assets/images/vitamin-c.jpg",
-        prescription: false,
-        stock: 30,
-        category: "Vitamins and Supplements"
-      }
-    ];
-
-    // Pagination settings
-    const pageSize = 6;
-    let currentPage = 1;
-    let filteredProducts = products;
-
-    // Render DaisyUI product cards
-    function renderProducts() {
-      const grid = document.getElementById('productGrid');
-      grid.innerHTML = '';
-      const start = (currentPage - 1) * pageSize;
-      const end = start + pageSize;
-      const pageProducts = filteredProducts.slice(start, end);
-
-      pageProducts.forEach(prod => {
-        const disabled = prod.stock === 0 ? "opacity-50 pointer-events-none" : "";
-        const card = document.createElement('div');
-        card.className = `card card-bordered shadow-md bg-base-100 hover:scale-105 hover:shadow-xl transition-all duration-200 ${disabled}`;
-        card.innerHTML = `
-          <figure class="px-6 pt-6">
-            <img src="${prod.image}" alt="${prod.name}" class="rounded-xl h-32 object-contain" />
-          </figure>
-          <div class="card-body items-start">
-            <h2 class="card-title text-primary">${prod.name}</h2>
-            <p class="text-gray-500 mb-2">${prod.desc}</p>
-            <div class="flex flex-wrap gap-2 mb-2">
-              <span class="badge badge-success">${prod.category}</span>
-              ${prod.prescription ? '<span class="badge badge-error">Prescription Required</span>' : ''}
-              ${prod.stock === 0 ? '<span class="badge badge-warning">Out of Stock</span>' : ''}
-            </div>
-            <div class="font-bold text-lg text-accent mb-2">Ksh ${prod.price.toLocaleString()}</div>
-            <div class="card-actions w-full">
-              <button class="btn btn-primary w-full transition-all duration-200" ${prod.stock === 0 ? 'disabled' : ''}>Add to Cart</button>
-            </div>
-          </div>
-        `;
-        grid.appendChild(card);
-      });
-    }
-
-    // Render DaisyUI pagination
-    function renderPagination() {
-      const pag = document.getElementById('pagination');
-      pag.innerHTML = '';
-      const totalPages = Math.ceil(filteredProducts.length / pageSize);
-      if (totalPages <= 1) return;
-
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.className = `btn btn-outline btn-sm ${i === currentPage ? 'btn-active btn-primary' : ''}`;
-        btn.textContent = i;
-        btn.onclick = () => {
-          currentPage = i;
-          renderProducts();
-          renderPagination();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        pag.appendChild(btn);
-      }
-    }
-
-    // Search functionality
-    document.getElementById('searchInput').addEventListener('input', function () {
-      const val = this.value.trim().toLowerCase();
-      filteredProducts = products.filter(p =>
-        p.name.toLowerCase().includes(val)
-      );
-      currentPage = 1;
-      renderProducts();
-      renderPagination();
-    });
-
-    // Category filter logic
-    document.querySelectorAll('.category-link').forEach(link => {
-      link.addEventListener('click', function (e) {
-        e.preventDefault();
-        const cat = this.getAttribute('data-category');
-        if (cat === "All medicines") {
-          filteredProducts = products;
-        } else {
-          filteredProducts = products.filter(p => p.category === cat);
-        }
-        currentPage = 1;
-        renderProducts();
-        renderPagination();
-      });
-    });
-
-    // Initial render
-    renderProducts();
-    renderPagination();
+  <script src="../scripts/shop.js">
   </script>
 </body>
-
 </html>

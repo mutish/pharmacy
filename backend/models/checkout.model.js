@@ -11,10 +11,23 @@ const checkoutSchema = new mongoose.Schema({
     type: String, // from M-Pesa after STK push
   },
 
+  // Optional MPESA fields populated on callback
+  mpesaTransactionId: {
+    type: String,
+    unique: true,
+    sparse: true,
+    default: null
+  },
   receiptNumber: {
     type: String,
     unique: true,
-    sparse: true, // allows nulls while still unique
+    sparse: true,
+    default: null
+  },
+  // store raw MPESA callback payload / metadata
+  mpesa: {
+    type: mongoose.Schema.Types.Mixed,
+    default: {}
   },
 
   orderId: {
@@ -47,7 +60,7 @@ const checkoutSchema = new mongoose.Schema({
 
   status: {
     type: String,
-    enum: ["pending", "successful", "failed"],
+    enum: ["pending", "initiated", "successful", "failed"],
     default: "pending",
   },
 }, { timestamps: true });

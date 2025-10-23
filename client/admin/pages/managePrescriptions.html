@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Prescriptions | Pharmacist Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-base-100 min-h-screen flex">
+  
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 w-full">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <span class="text-xl font-bold text-primary">Medicare Pharmacist</span>
+      <div class="flex items-center gap-4">
+        <div class="indicator">
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img id="userAvatar" src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="../pages/pharmacistDashboard.html">Dashboard</a></li>
+            <li><a href="settings.html">Settings</a></li>
+            <li><a href="../auth/loginPharmacist.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Section -->
+    <div class="container mx-auto px-2 py-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+        <div>
+          <h1 class="text-3xl font-bold text-primary mb-1">Manage Prescriptions</h1>
+          <p class="text-base text-gray-600">View, approve, or reject prescriptions submitted by doctors or patients.</p>
+        </div>
+        <div class="flex gap-3 items-center">
+          <span class="badge badge-success">Approved: <span id="approvedCount">0</span></span>
+          <span class="badge badge-warning">Pending: <span id="pendingCount">0</span></span>
+          <span class="badge badge-error">Rejected: <span id="rejectedCount">0</span></span>
+          <span class="badge badge-info">Total: <span id="totalCount">0</span></span>
+          <button id="addPrescriptionBtn" class="btn btn-primary btn-sm"><i class="fa-solid fa-file-medical mr-2"></i>Add Prescription</button>
+        </div>
+      </div>
+
+      <!-- Filters -->
+      <div class="flex flex-wrap gap-4 mb-4 items-center">
+        <input type="text" id="searchPrescription" class="input input-bordered w-60" placeholder="Search by patient or doctor name" />
+        <select id="statusFilter" class="select select-bordered w-40">
+          <option value="">All Statuses</option>
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Prescription ID</th>
+              <th>Patient Name</th>
+              <th>Doctor Name</th>
+              <th>Issued Date</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="prescriptionsTable">
+            <!-- JS will render prescriptions here -->
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      <div id="pagination" class="flex justify-center mt-8 gap-2"></div>
+    </div>
+  </div>
+
+  <!-- View/Edit Prescription Modal -->
+  <dialog id="editPrescriptionModal" class="modal">
+    <form method="dialog" class="modal-box max-w-md animate-fadein">
+      <h3 class="font-bold text-lg mb-2 text-primary">View / Update Prescription</h3>
+      <div class="flex flex-col gap-4">
+        <input type="text" id="editPatientName" class="input input-bordered w-full" placeholder="Patient Name" readonly />
+        <input type="text" id="editDoctorName" class="input input-bordered w-full" placeholder="Doctor Name" readonly />
+        <textarea id="editPrescriptionDetails" class="textarea textarea-bordered w-full" placeholder="Prescription details..." readonly></textarea>
+        <select id="editStatus" class="select select-bordered w-full">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="flex gap-4 mt-6 justify-end">
+        <button type="button" id="saveEditPrescriptionBtn" class="btn btn-primary">Save</button>
+        <button type="button" id="cancelEditPrescriptionBtn" class="btn btn-outline">Cancel</button>
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop"><button>close</button></form>
+  </dialog>
+
+  <!-- Add Prescription Modal -->
+  <dialog id="addPrescriptionModal" class="modal">
+    <form method="dialog" class="modal-box max-w-md animate-fadein">
+      <h3 class="font-bold text-lg mb-2 text-primary">Add New Prescription</h3>
+      <div class="flex flex-col gap-4">
+        <input type="text" id="addPatientName" class="input input-bordered w-full" placeholder="Patient Name" required />
+        <input type="text" id="addDoctorName" class="input input-bordered w-full" placeholder="Doctor Name" required />
+        <textarea id="addPrescriptionDetails" class="textarea textarea-bordered w-full" placeholder="Prescription details..." required></textarea>
+        <select id="addStatus" class="select select-bordered w-full">
+          <option value="pending">Pending</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+      </div>
+      <div class="flex gap-4 mt-6 justify-end">
+        <button type="button" id="saveAddPrescriptionBtn" class="btn btn-primary">Add</button>
+        <button type="button" id="cancelAddPrescriptionBtn" class="btn btn-outline">Cancel</button>
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop"><button>close</button></form>
+  </dialog>
+
+  <!-- Confirm Delete Modal -->
+  <dialog id="confirmModal" class="modal">
+    <form method="dialog" class="modal-box max-w-sm animate-fadein flex flex-col items-center">
+      <span id="confirmIcon" class="text-4xl mb-2"></span>
+      <h3 id="confirmTitle" class="font-bold text-lg mb-2"></h3>
+      <p id="confirmMsg" class="mb-4"></p>
+      <div class="flex gap-4 w-full justify-end">
+        <button type="button" id="confirmYesBtn" class="btn btn-error">Yes</button>
+        <button type="button" id="confirmNoBtn" class="btn btn-outline">No</button>
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop"><button>close</button></form>
+  </dialog>
+
+  <!-- Expose user role -->
+  <script>
+    (function() {
+      try {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          const u = JSON.parse(userStr);
+          if (u && u.role) {
+            document.body.dataset.currentUserRole = String(u.role).toLowerCase();
+          }
+        }
+      } catch (e) {
+        console.warn('Could not determine current user role', e);
+      }
+    })();
+  </script>
+
+  <script src="../scripts/managePrescriptions.js"></script>
+</body>
+</html>

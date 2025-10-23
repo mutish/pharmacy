@@ -11,7 +11,7 @@
   <!-- Sticky Navbar -->
   <nav class="navbar sticky top-0 z-40 bg-base-200 shadow-sm px-4 py-2 flex flex-wrap items-center justify-between">
     <div class="flex items-center gap-2">
-      <a href="/client/index.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+      <a href="/client/home.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
       <a href="/client/patient/home.html" class="btn btn-outline btn-sm ml-2">← Back to Home</a>
     </div>
     <div class="flex-1 mx-4 max-w-md">
@@ -25,7 +25,7 @@
       <div class="dropdown dropdown-end">
         <label tabindex="0" class="avatar cursor-pointer">
           <div class="w-10 rounded-full border-2 border-primary">
-            <img src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+            <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
           </div>
         </label>
         <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
@@ -52,6 +52,20 @@
   </div>
 
   <script>
+    (() => {
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          const avatarEl = document.getElementById('userAvatar');
+          if (avatarEl && user && user.profilePic) {
+            avatarEl.src = user.profilePic;
+          }
+        }
+      } catch (e) {
+        // fallback: do nothing
+      }
+    })();
     // Dummy notifications data
     let notifications = [
       {

@@ -9,49 +9,14 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 </head>
 <body class="bg-base-100 min-h-screen flex">
-  <!-- Sidebar Navigation -->
-  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
-    <div class="flex items-center justify-between px-2 py-4 border-b border-base-300">
-      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
-        <i class="fa-solid fa-bars text-xl"></i>
-      </button>
-      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Admin</span>
-    </div>
-    <nav class="flex-1 flex flex-col gap-2 mt-4">
-      <a href="dashboard.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Dashboard">
-        <i class="fa-solid fa-gauge-high text-primary text-xl"></i>
-        <span class="sidebar-label hidden md:inline">Dashboard</span>
-      </a>
-      <a href="manageUsers.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Users">
-        <i class="fa-solid fa-users text-primary text-xl"></i>
-        <span class="sidebar-label hidden md:inline">Users</span>
-      </a>
-      <a href="products.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Products">
-        <i class="fa-solid fa-capsules text-primary text-xl"></i>
-        <span class="sidebar-label hidden md:inline">Products</span>
-      </a>
-      <a href="orders.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Orders">
-        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
-        <span class="sidebar-label hidden md:inline">Orders</span>
-      </a>
-      <a href="settings.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Settings">
-        <i class="fa-solid fa-gear text-primary text-xl"></i>
-        <span class="sidebar-label hidden md:inline">Settings</span>
-      </a>
-      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Logout">
-        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
-        <span class="sidebar-label hidden md:inline text-error">Logout</span>
-      </a>
-    </nav>
-  </aside>
-  <!-- Main Content Wrapper -->
-  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+  
+  <!-- Main Content Wrapper (sidebar removed) -->
+  <div id="mainContent" class="flex-1 w-full">
     <!-- Navbar -->
     <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
       <span class="text-xl font-bold text-primary">Medicare Admin</span>
       <div class="flex items-center gap-4">
         <div class="indicator">
-          <span class="indicator-item badge badge-warning">2</span>
           <button class="btn btn-ghost text-xl" title="Notifications">
             <i class="fa-solid fa-bell"></i>
           </button>
@@ -59,13 +24,13 @@
         <div class="dropdown dropdown-end">
           <label tabindex="0" class="avatar cursor-pointer">
             <div class="w-10 rounded-full border-2 border-primary">
-              <img src="/client/assets/images/admin-avatar.jpg" alt="Admin Avatar" />
+              <img id="userAvatar" src="/client/assets/images/admin-avatar.jpg" alt="Admin Avatar" />
             </div>
           </label>
           <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
-            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="../pages/adminDashboard.html">Dashboard</a></li>
             <li><a href="settings.html">Settings</a></li>
-            <li><a href="/client/index.html">Logout</a></li>
+            <li><a href="../auth/loginAdmin.html">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -121,20 +86,20 @@
     <form method="dialog" class="modal-box max-w-md animate-fadein">
       <h3 class="font-bold text-lg mb-2 text-primary">Edit User</h3>
       <div class="flex flex-col gap-4">
-        <input type="text" id="editFullName" class="input input-bordered w-full" placeholder="Full Name" required />
-        <input type="email" id="editEmail" class="input input-bordered w-full" placeholder="Email" required />
-        <select id="editRole" class="select select-bordered w-full">
+        <input type="text" id="editFullName" class="input input-bordered w-full" placeholder="Full Name" required data-editable />
+        <input type="email" id="editEmail" class="input input-bordered w-full" placeholder="Email" required data-editable />
+        <select id="editRole" class="select select-bordered w-full" data-editable>
           <option value="Client">Client</option>
           <option value="Pharmacist">Pharmacist</option>
           <option value="Admin">Admin</option>
         </select>
-        <select id="editStatus" class="select select-bordered w-full">
+        <select id="editStatus" class="select select-bordered w-full" data-editable>
           <option value="Active">Active</option>
           <option value="Suspended">Suspended</option>
         </select>
       </div>
       <div class="flex gap-4 mt-6 justify-end">
-        <button type="button" id="saveEditUserBtn" class="btn btn-primary">Save</button>
+        <button type="button" id="saveEditUserBtn" class="btn btn-primary" data-editable>Save</button>
         <button type="button" id="cancelEditUserBtn" class="btn btn-outline">Cancel</button>
       </div>
     </form>
@@ -147,14 +112,22 @@
   <dialog id="addUserModal" class="modal">
     <form method="dialog" class="modal-box max-w-md animate-fadein">
       <h3 class="font-bold text-lg mb-2 text-primary">Add New User</h3>
+      <p class="text-sm text-gray-600 mb-2">Create a new Pharmacist or Admin account. Patient accounts are created via user signup.</p>
       <div class="flex flex-col gap-4">
         <input type="text" id="addFullName" class="input input-bordered w-full" placeholder="Full Name" required />
         <input type="email" id="addEmail" class="input input-bordered w-full" placeholder="Email" required />
-        <select id="addRole" class="select select-bordered w-full">
-          <option value="Client">Client</option>
-          <option value="Pharmacist">Pharmacist</option>
-          <option value="Admin">Admin</option>
+        <!-- New: gender required by backend -->
+        <select id="addGender" class="select select-bordered w-full" required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
         </select>
+        <select id="addRole" class="select select-bordered w-full">
+          <option value="pharmacist">Pharmacist</option>
+          <option value="admin">Admin</option>
+        </select>
+        <!-- New: license number (only for pharmacists) -->
+        <input type="text" id="addLicense" class="input input-bordered w-full hidden" placeholder="License Number (pharmacist only)" />
         <select id="addStatus" class="select select-bordered w-full">
           <option value="Active">Active</option>
           <option value="Suspended">Suspended</option>
@@ -186,213 +159,37 @@
     </form>
   </dialog>
 
+  <!-- Expose current user role for client scripts -->
   <script>
-    // Dummy users data
-    let users = [
-      { id: "U1001", name: "Jane Doe", email: "jane.doe@email.com", role: "Client", status: "Active" },
-      { id: "U1002", name: "John Smith", email: "john.smith@email.com", role: "Pharmacist", status: "Active" },
-      { id: "U1003", name: "Mary Wanjiku", email: "mary.wanjiku@email.com", role: "Client", status: "Suspended" },
-      { id: "U1004", name: "Ali Mwangi", email: "ali.mwangi@email.com", role: "Pharmacist", status: "Active" },
-      { id: "U1005", name: "Admin User", email: "admin@email.com", role: "Admin", status: "Active" }
-    ];
-    let filteredUsers = users;
-    const pageSize = 4;
-    let currentPage = 1;
-    let editIdx = null;
-
-    function renderStats() {
-      document.getElementById('activeCount').textContent = users.filter(u => u.status === "Active").length;
-      document.getElementById('suspendedCount').textContent = users.filter(u => u.status === "Suspended").length;
-      document.getElementById('totalCount').textContent = users.length;
-    }
-
-    function renderTable() {
-      const tbody = document.getElementById('usersTable');
-      tbody.innerHTML = '';
-      const start = (currentPage - 1) * pageSize;
-      const end = start + pageSize;
-      const pageUsers = filteredUsers.slice(start, end);
-
-      pageUsers.forEach((user, idx) => {
-        const statusBadge = user.status === "Active"
-          ? '<span class="badge badge-success">Active</span>'
-          : '<span class="badge badge-error">Suspended</span>';
-        const roleBadge = user.role === "Admin"
-          ? '<span class="badge badge-info">Admin</span>'
-          : user.role === "Pharmacist"
-            ? '<span class="badge badge-warning">Pharmacist</span>'
-            : '<span class="badge badge-success">Client</span>';
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${user.id}</td>
-          <td>${user.name}</td>
-          <td>${user.email}</td>
-          <td>${roleBadge}</td>
-          <td>${statusBadge}</td>
-          <td>
-            <button class="btn btn-xs btn-outline btn-info view-btn" data-idx="${idx}"><i class="fa-solid fa-eye"></i></button>
-            <button class="btn btn-xs btn-outline btn-success edit-btn" data-idx="${idx}"><i class="fa-solid fa-pen"></i></button>
-            <button class="btn btn-xs btn-outline btn-error delete-btn" data-idx="${idx}"><i class="fa-solid fa-trash"></i></button>
-            <button class="btn btn-xs btn-outline btn-warning suspend-btn" data-idx="${idx}"><i class="fa-solid fa-ban"></i></button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      // Edit button logic
-      document.querySelectorAll('.edit-btn').forEach(btn => {
-        btn.onclick = function() {
-          editIdx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
-          openEditUserModal(editIdx);
-        };
-      });
-      // Delete button logic
-      document.querySelectorAll('.delete-btn').forEach(btn => {
-        btn.onclick = function() {
-          editIdx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
-          openConfirmModal("Delete User", "Are you sure you want to delete this user?", "❌", () => {
-            users.splice(editIdx, 1);
-            filterUsers();
-            closeConfirmModal();
-          });
-        };
-      });
-      // Suspend button logic
-      document.querySelectorAll('.suspend-btn').forEach(btn => {
-        btn.onclick = function() {
-          editIdx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
-          openConfirmModal("Suspend User", "Suspend this user account?", "🚫", () => {
-            users[editIdx].status = "Suspended";
-            filterUsers();
-            closeConfirmModal();
-          });
-        };
-      });
-      // View button logic (for demo, just open edit modal)
-      document.querySelectorAll('.view-btn').forEach(btn => {
-        btn.onclick = function() {
-          editIdx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
-          openEditUserModal(editIdx);
-        };
-      });
-    }
-
-    function openEditUserModal(idx) {
-      const user = filteredUsers[idx];
-      document.getElementById('editFullName').value = user.name;
-      document.getElementById('editEmail').value = user.email;
-      document.getElementById('editRole').value = user.role;
-      document.getElementById('editStatus').value = user.status;
-      document.getElementById('editUserModal').showModal();
-    }
-    document.getElementById('saveEditUserBtn').onclick = function() {
-      const user = filteredUsers[editIdx];
-      user.name = document.getElementById('editFullName').value;
-      user.email = document.getElementById('editEmail').value;
-      user.role = document.getElementById('editRole').value;
-      user.status = document.getElementById('editStatus').value;
-      document.getElementById('editUserModal').close();
-      filterUsers();
-    };
-    document.getElementById('cancelEditUserBtn').onclick = function() {
-      document.getElementById('editUserModal').close();
-    };
-
-    // Add user modal logic
-    document.getElementById('addUserBtn').onclick = function() {
-      document.getElementById('addFullName').value = "";
-      document.getElementById('addEmail').value = "";
-      document.getElementById('addRole').value = "Client";
-      document.getElementById('addStatus').value = "Active";
-      document.getElementById('addUserModal').showModal();
-    };
-    document.getElementById('saveAddUserBtn').onclick = function() {
-      const name = document.getElementById('addFullName').value;
-      const email = document.getElementById('addEmail').value;
-      const role = document.getElementById('addRole').value;
-      const status = document.getElementById('addStatus').value;
-      users.push({
-        id: "U" + (1000 + users.length + 1),
-        name, email, role, status
-      });
-      document.getElementById('addUserModal').close();
-      filterUsers();
-    };
-    document.getElementById('cancelAddUserBtn').onclick = function() {
-      document.getElementById('addUserModal').close();
-    };
-
-    // Confirm modal logic
-    function openConfirmModal(title, msg, icon, onConfirm) {
-      document.getElementById('confirmTitle').textContent = title;
-      document.getElementById('confirmMsg').textContent = msg;
-      document.getElementById('confirmIcon').textContent = icon;
-      document.getElementById('confirmModal').showModal();
-      document.getElementById('confirmYesBtn').onclick = onConfirm;
-      document.getElementById('confirmNoBtn').onclick = closeConfirmModal;
-    }
-    function closeConfirmModal() {
-      document.getElementById('confirmModal').close();
-    }
-
-    // Search/filter logic
-    document.getElementById('searchUser').addEventListener('input', filterUsers);
-    document.getElementById('roleFilter').addEventListener('change', filterUsers);
-    function filterUsers() {
-      const search = document.getElementById('searchUser').value.trim().toLowerCase();
-      const role = document.getElementById('roleFilter').value;
-      filteredUsers = users.filter(u =>
-        (!search || u.name.toLowerCase().includes(search) || u.email.toLowerCase().includes(search)) &&
-        (!role || u.role === role)
-      );
-      currentPage = 1;
-      renderStats();
-      renderTable();
-      renderPagination();
-    }
-
-    // Pagination
-    function renderPagination() {
-      const pag = document.getElementById('pagination');
-      pag.innerHTML = '';
-      const totalPages = Math.ceil(filteredUsers.length / pageSize);
-      if (totalPages <= 1) return;
-      for (let i = 1; i <= totalPages; i++) {
-        const btn = document.createElement('button');
-        btn.className = `btn btn-outline btn-sm ${i === currentPage ? 'btn-active btn-primary' : ''}`;
-        btn.textContent = i;
-        btn.onclick = () => {
-          currentPage = i;
-          renderTable();
-          renderPagination();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
-        };
-        pag.appendChild(btn);
+    (function() {
+      try {
+        const userStr = localStorage.getItem('user');
+        if (userStr) {
+          const u = JSON.parse(userStr);
+          if (u && u.role) {
+            document.body.dataset.currentUserRole = String(u.role).toLowerCase();
+          }
+        }
+      } catch (e) {
+        console.warn('Could not determine current user role', e);
       }
-    }
-
-    // Sidebar toggle logic
-    const sidebar = document.getElementById('sidebar');
-    const mainContent = document.getElementById('mainContent');
-    const sidebarToggle = document.getElementById('sidebarToggle');
-    sidebarToggle.addEventListener('click', function() {
-      if (sidebar.classList.contains('md:w-64')) {
-        sidebar.classList.remove('md:w-64');
-        sidebar.classList.add('w-16');
-        mainContent.classList.remove('md:ml-64');
-        mainContent.classList.add('ml-16');
-        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
-      } else {
-        sidebar.classList.remove('w-16');
-        sidebar.classList.add('md:w-64');
-        mainContent.classList.remove('ml-16');
-        mainContent.classList.add('md:ml-64');
-        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
-      }
-    });
-
-    // Initial render
-    filterUsers();
+    })();
+    // avatar fallback to avoid broken image errors
+    (function() {
+      const av = document.getElementById('userAvatar');
+      if (!av) return;
+      av.addEventListener('error', function() {
+        // use a safe placeholder (replace with local file if you prefer)
+        this.src = 'https://via.placeholder.com/80?text=Avatar';
+      });
+    })();
   </script>
-</body>
-</html>
+
+  <script src="../scripts/manageUsers.js"></script>
+
+  <script>
+   
+   </script>
+
+ </body>
+ </html>

@@ -15,9 +15,8 @@ export const createOrder = async (req, res) => {
     if (!user) return res.status(404).json({ error: "User not found" });
     const orderId = `OR${Date.now().toString().slice(-6)}${Math.random().toString(36).substring(2,5).toUpperCase()}`;
 
-    // If you’re referencing the user's location directly:
-    const location = user.address; // because your schema currently references user
-    // (If you decide to snapshot the address instead, copy address fields here)
+    // Use provided location or fallback to user's saved address
+    const location = req.body.location || user.address || 'Not specified';
 
     // 2. Get cart items for user
     const cartItems = await Cart.find({ userId }).populate("productId");
@@ -56,9 +55,9 @@ export const createOrder = async (req, res) => {
     const newOrder = new Order({
       orderId,
       userId,
-      location, 
-      deliveryFee: 150,           // currently referencing User
-      totalAmount,
+      location,
+      deliveryFee: 150,
+      total: totalAmount,
       items: orderItems
     });
 
@@ -165,6 +164,46 @@ export const cancelOrder = async (req, res) => {
     res.status(200).json({ message: "Order cancelled", order });
   } catch (error) {
     console.error("Error cancelling order:", error.message);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+// New: handle cancellation requests coming from users (provide orderId + user email)
+export const requestCancelOrder = async (req, res) => {
+  try {
+    const { orderId, email } = req.body;
+    if (!orderId || !email) {
+      return res.status(400).json({ error: "orderId and email are required" });
+    }
+
+    // find order and populate user email and items
+    const order = await Order.findOne({ orderId }).populate("items.productId").populate("userId", "email");
+    if (!order) return res.status(404).json({ error: "Order not found" });
+
+    const orderUserEmail = (order.userId && order.userId.email) ? String(order.userId.email).toLowerCase() : null;
+    if (!orderUserEmail || orderUserEmail !== String(email).toLowerCase()) {
+      return res.status(403).json({ error: "Provided email does not match order owner" });
+    }
+
+    if (order.status === "cancelled" || order.status === "cancelled") {
+      return res.status(400).json({ error: "Order already cancelled" });
+    }
+
+    // restore stock for each item
+    for (const item of order.items) {
+      const product = await Product.findById(item.productId._id || item.productId);
+      if (product) {
+        product.stock = (product.stock || 0) + item.quantity;
+        await product.save();
+      }
+    }
+
+    order.status = "cancelled";
+    await order.save();
+
+    res.status(200).json({ message: "Order cancelled by user request", order });
+  } catch (error) {
+    console.error("Error in requestCancelOrder:", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };

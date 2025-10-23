@@ -14,18 +14,13 @@
       <a href="/client/index.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
       <a href="shop.html" class="btn btn-outline btn-sm ml-2">← Back to Shop</a>
     </div>
-    <div class="flex-1 mx-4 max-w-md">
-      <div class="relative w-full">
-        <input type="search" class="input input-bordered w-full pl-4 pr-10" placeholder="Search medicines..." />
-        <span class="absolute right-3 top-2.5 text-gray-400 text-lg">&#128269;</span>
-      </div>
-    </div>
+    
     <div class="flex items-center gap-4">
-      <button class="btn btn-ghost text-xl" onclick="window.location.href='cart.html'" title="View Cart">&#128722;</button>
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='/client/patient/pages/cart.html'" title="View Cart">&#128722;</button>
       <div class="dropdown dropdown-end">
         <label tabindex="0" class="avatar cursor-pointer">
           <div class="w-10 rounded-full border-2 border-primary">
-            <img src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+            <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
           </div>
         </label>
         <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
@@ -109,6 +104,21 @@
   </div>
 
   <script>
+    (() => {
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          const avatarEl = document.getElementById('userAvatar');
+          if (avatarEl && user && user.profilePic) {
+            avatarEl.src = user.profilePic;
+          }
+        }
+      } catch (e) {
+        // fallback: do nothing
+      }
+    })();
+
     // Simulated order data
     const order = {
       id: "CO123456",
