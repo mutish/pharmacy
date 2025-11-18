@@ -1,0 +1,35 @@
+{
+  "name": "pharmacy",
+  "version": "1.0.0",
+  "private": true,
+  "main": "backend/server.js",
+  "type": "module",
+  "scripts": {
+    "server": "nodemon backend/server.js",
+    "dev": "concurrently \"nodemon backend/server.js\" \"live-server client --port=5500 --no-browser\"",
+    "start": "node backend/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.19.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "pdf-parse": "^1.1.1",
+    "tesseract.js": "^6.0.1"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "live-server": "^1.2.2",
+    "nodemon": "^3.1.10"
+  }
+}
+    
+   

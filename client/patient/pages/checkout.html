@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout | Medicare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-100 min-h-screen">
+  <!-- Navbar (reuse from shop.html) -->
+  <nav class="navbar bg-base-200 shadow-sm rounded-b-xl px-4 py-2 flex flex-wrap items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/client/home.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+      <a href="cart.html" class="btn btn-outline btn-sm ml-2">← Back to Cart</a>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='cart.html'" title="View Cart">&#128722;</button>
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="avatar cursor-pointer">
+          <div class="w-10 rounded-full border-2 border-primary">
+            <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+          </div>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+          <li><a href="/client/index.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Checkout Section -->
+  <div class="container mx-auto px-2 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Order Summary -->
+      <div class="md:col-span-1">
+        <div class="card bg-base-100 shadow-md p-6">
+          <h2 class="card-title mb-4 text-primary">Order Summary</h2>
+          <div class="divider"></div>
+          <ul id="orderSummary" class="mb-4">
+            <!-- JS will render order items here -->
+          </ul>
+          <div class="flex justify-between font-bold text-lg mt-4">
+            <span>Total Amount</span>
+            <span id="totalAmount">Ksh 0</span>
+          </div>
+        </div>
+      </div>
+      <!-- Checkout Form -->
+      <div class="md:col-span-2">
+        <form id="checkoutForm" class="card bg-base-100 shadow-md p-8 flex flex-col gap-6">
+          <h1 class="text-3xl font-bold mb-2 text-primary">💳 Checkout</h1>
+          <div class="form-control">
+            <label class="label font-semibold" for="deliveryLocation">Delivery Location</label>
+            <input type="text" id="deliveryLocation" class="input input-bordered w-full" placeholder="Enter delivery address" required>
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="phoneNumber">Phone Number (MPESA)</label>
+            <input type="tel" id="phoneNumber" class="input input-bordered w-full" placeholder="Enter phone number" required pattern="^07\d{8}$">
+          </div>
+          <button type="submit" id="payBtn" class="btn btn-primary w-full mt-4 transition-all duration-200" disabled>Proceed to Payment</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loader Overlay -->
+  <div id="loaderOverlay" class="fixed inset-0 bg-black bg-opacity-40 flex flex-col items-center justify-center z-50 hidden transition-all duration-300">
+    <span class="loading loading-spinner loading-lg text-primary mb-6"></span>
+    <div class="text-xl text-base-100 font-semibold animate-fadein">Processing your payment…</div>
+  </div>
+
+  <!-- Payment Modal -->
+  <dialog id="paymentModal" class="modal">
+    <form method="dialog" class="modal-box flex flex-col items-center">
+      <div id="modalIcon" class="text-5xl mb-2"></div>
+      <h3 id="modalTitle" class="font-bold text-lg mb-2"></h3>
+      <p id="modalMsg" class="mb-4"></p>
+      <button id="modalCloseBtn" class="btn btn-primary w-full transition-all duration-200">Close</button>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <!-- 🧠 Scripts -->
+  <script src="../scripts/checkout.js"></script>
+</body>
+</html>
+        
+  </script>
+</body>
+</html>

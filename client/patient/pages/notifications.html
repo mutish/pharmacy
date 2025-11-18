@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notifications | Medicare Pharmacy</title>
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-100 min-h-screen">
+  <!-- Sticky Navbar -->
+  <nav class="navbar sticky top-0 z-40 bg-base-200 shadow-sm px-4 py-2 flex flex-wrap items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/client/home.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+      <a href="/client/patient/home.html" class="btn btn-outline btn-sm ml-2">← Back to Home</a>
+    </div>
+    <div class="flex-1 mx-4 max-w-md">
+      <div class="relative w-full">
+        <input type="search" class="input input-bordered w-full pl-4 pr-10" placeholder="Search medicines..." />
+        <span class="absolute right-3 top-2.5 text-gray-400 text-lg">&#128269;</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='cart.html'" title="View Cart">&#128722;</button>
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="avatar cursor-pointer">
+          <div class="w-10 rounded-full border-2 border-primary">
+            <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+          </div>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+            <li><a href="/client/patient/pages/profile.html">Profile</a></li>
+          <li><a href="/client/index.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="container mx-auto px-2 py-8 max-w-2xl">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-primary">Notifications</h1>
+      <button id="markAllReadBtn" class="btn btn-outline btn-sm transition-all duration-200">Mark all as read</button>
+    </div>
+    <div id="notificationsList" class="flex flex-col gap-4">
+      <!-- JS will render notifications here -->
+    </div>
+    <div id="emptyState" class="hidden flex flex-col items-center justify-center py-16">
+      <div class="text-3xl mb-2">🎉 You’re all caught up!</div>
+      <div class="text-base text-gray-500">No new notifications right now.</div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          const avatarEl = document.getElementById('userAvatar');
+          if (avatarEl && user && user.profilePic) {
+            avatarEl.src = user.profilePic;
+          }
+        }
+      } catch (e) {
+        // fallback: do nothing
+      }
+    })();
+    // Dummy notifications data
+    let notifications = [
+      {
+        id: 1,
+        title: "System Update",
+        message: "We’ve improved our checkout experience for faster payments.",
+        timestamp: "2 hours ago",
+        status: "New",
+        read: false
+      },
+      {
+        id: 2,
+        title: "Prescription Approved",
+        message: "Your prescription for Amoxicillin has been approved by the pharmacist.",
+        timestamp: "1 hour ago",
+        status: "New",
+        read: false
+      },
+      {
+        id: 3,
+        title: "Order Ready for Pickup",
+        message: "Order #CO123456 is ready for pickup at the pharmacy counter.",
+        timestamp: "10 minutes ago",
+        status: "Read",
+        read: true
+      }
+    ];
+
+    function renderNotifications() {
+      const list = document.getElementById('notificationsList');
+      const emptyState = document.getElementById('emptyState');
+      list.innerHTML = '';
+      const hasNotifications = notifications.length > 0;
+      if (!hasNotifications) {
+        emptyState.classList.remove('hidden');
+        return;
+      } else {
+        emptyState.classList.add('hidden');
+      }
+      notifications.forEach(n => {
+        const card = document.createElement('div');
+        card.className = `card shadow-md p-4 flex flex-col gap-2 ${!n.read ? 'bg-green-50 border-l-4 border-success' : 'bg-base-100'}`;
+        card.innerHTML = `
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-lg ${!n.read ? 'text-success' : 'text-primary'}">${n.title}</span>
+            <span class="badge ${!n.read ? 'badge-success' : 'badge-ghost'}">${n.status}</span>
+          </div>
+          <div class="text-base text-gray-700">${n.message}</div>
+          <div class="flex justify-between items-center mt-2">
+            <span class="text-xs text-gray-400">${n.timestamp}</span>
+          </div>
+        `;
+        list.appendChild(card);
+      });
+    }
+
+    document.getElementById('markAllReadBtn').onclick = function() {
+      notifications = notifications.map(n => ({ ...n, read: true, status: "Read" }));
+      renderNotifications();
+    };
+
+    // Initial render
+    renderNotifications();
+  </script>
+</body>
+</html>

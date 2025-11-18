@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Summary | Medicare</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+<body class="bg-base-100 min-h-screen">
+  <!-- Navbar (reuse from shop.html/checkout.html) -->
+  <nav class="navbar bg-base-200 shadow-sm rounded-b-xl px-4 py-2 flex flex-wrap items-center justify-between">
+    <div class="flex items-center gap-2">
+      <a href="/client/index.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare</a>
+      <a href="shop.html" class="btn btn-outline btn-sm ml-2">← Back to Shop</a>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <button class="btn btn-ghost text-xl" onclick="window.location.href='/client/patient/pages/cart.html'" title="View Cart">&#128722;</button>
+      <div class="dropdown dropdown-end">
+        <label tabindex="0" class="avatar cursor-pointer">
+          <div class="w-10 rounded-full border-2 border-primary">
+            <img id="userAvatar" src="/client/assets/images/user-avatar.jpg" alt="User Avatar" />
+          </div>
+        </label>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-40">
+          <li><a href="/client/index.html">Logout</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Order Section -->
+  <div class="container mx-auto px-2 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Invoice Card -->
+      <div class="md:col-span-2">
+        <div class="card bg-base-100 shadow-md p-6">
+          <div class="flex justify-between items-center mb-4">
+            <h2 class="card-title text-primary">Order Invoice</h2>
+            <button class="btn btn-outline btn-primary transition-all duration-200" onclick="window.print()">Download Invoice</button>
+          </div>
+          <div class="divider"></div>
+          <div class="mb-2 flex flex-wrap gap-6">
+            <div>
+              <span class="font-semibold">Order ID:</span>
+              <span id="orderId" class="ml-1">CO123456</span>
+            </div>
+            <div>
+              <span class="font-semibold">Date:</span>
+              <span id="orderDate" class="ml-1">2024-06-01</span>
+            </div>
+          </div>
+          <div class="mb-2">
+            <span class="font-semibold">Name:</span>
+            <span id="userName" class="ml-1">Jane Doe</span>
+          </div>
+          <div class="mb-4">
+            <span class="font-semibold">Email:</span>
+            <span id="userEmail" class="ml-1">jane.doe@email.com</span>
+          </div>
+          <div class="divider"></div>
+          <div class="overflow-x-auto">
+            <table class="table w-full">
+              <thead>
+                <tr>
+                  <th>Product</th>
+                  <th>Qty</th>
+                  <th>Unit Price</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody id="orderItems">
+                <!-- JS will render order items here -->
+              </tbody>
+            </table>
+          </div>
+          <div class="divider"></div>
+          <div class="flex justify-end font-bold text-lg">
+            <span>Total: </span>
+            <span id="orderTotal" class="ml-2 text-primary">Ksh 0</span>
+          </div>
+        </div>
+      </div>
+      <!-- Status Card -->
+      <div class="md:col-span-1">
+        <div class="card bg-base-100 shadow-md p-6">
+          <h2 class="card-title mb-4 text-primary">Order Status</h2>
+          <div class="divider"></div>
+          <div id="orderStatusSection" class="mb-4">
+            <span class="badge badge-warning text-base mb-2" id="orderStatusBadge">Pending</span>
+            <div class="mt-4">
+              <!-- Progress bar/timeline -->
+              <ul class="steps steps-vertical md:steps-horizontal w-full">
+                <li class="step step-warning" id="stepPending">Pending</li>
+                <li class="step" id="stepProcessing">Processing</li>
+                <li class="step" id="stepDelivered">Delivered</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (() => {
+      try {
+        const userData = localStorage.getItem('user');
+        if (userData) {
+          const user = JSON.parse(userData);
+          const avatarEl = document.getElementById('userAvatar');
+          if (avatarEl && user && user.profilePic) {
+            avatarEl.src = user.profilePic;
+          }
+        }
+      } catch (e) {
+        // fallback: do nothing
+      }
+    })();
+
+    // Simulated order data
+    const order = {
+      id: "CO123456",
+      date: "2024-06-01",
+      user: { name: "Jane Doe", email: "jane.doe@email.com" },
+      items: [
+        { name: "Paracetamol", qty: 2, price: 120 },
+        { name: "Ibuprofen", qty: 1, price: 180 }
+      ],
+      status: "Pending", // Pending, Processing, Delivered
+      total: 420
+    };
+
+    // Render order details
+    document.getElementById('orderId').textContent = order.id;
+    document.getElementById('orderDate').textContent = order.date;
+    document.getElementById('userName').textContent = order.user.name;
+    document.getElementById('userEmail').textContent = order.user.email;
+
+    // Render order items
+    const orderItems = document.getElementById('orderItems');
+    order.items.forEach(item => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>Ksh ${item.price.toLocaleString()}</td>
+        <td>Ksh ${(item.price * item.qty).toLocaleString()}</td>
+      `;
+      orderItems.appendChild(tr);
+    });
+
+    document.getElementById('orderTotal').textContent = `Ksh ${order.total.toLocaleString()}`;
+
+    // Status badge and progress
+    const statusBadge = document.getElementById('orderStatusBadge');
+    const stepPending = document.getElementById('stepPending');
+    const stepProcessing = document.getElementById('stepProcessing');
+    const stepDelivered = document.getElementById('stepDelivered');
+
+    if (order.status === "Pending") {
+      statusBadge.className = "badge badge-warning text-base mb-2";
+      stepPending.classList.add("step-warning");
+      stepProcessing.classList.remove("step-info", "step-success");
+      stepDelivered.classList.remove("step-success");
+    } else if (order.status === "Processing") {
+      statusBadge.textContent = "Processing";
+      statusBadge.className = "badge badge-info text-base mb-2";
+      stepPending.classList.add("step-warning");
+      stepProcessing.classList.add("step-info");
+      stepDelivered.classList.remove("step-success");
+    } else if (order.status === "Delivered") {
+      statusBadge.textContent = "Delivered";
+      statusBadge.className = "badge badge-success text-base mb-2";
+      stepPending.classList.add("step-warning");
+      stepProcessing.classList.add("step-info");
+      stepDelivered.classList.add("step-success");
+    }
+  </script>
+</body>
+</html>

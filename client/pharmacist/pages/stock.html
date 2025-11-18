@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Stock | Pharmacist Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-base-100 min-h-screen flex">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
+    <div class="flex items-center justify-between px-2 py-4 border-b border-base-300">
+      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Medicare</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-2 mt-4">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Dashboard">
+        <i class="fa-solid fa-house-chimney text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Dashboard</span>
+      </a>
+      <a href="prescriptions.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Prescriptions">
+        <i class="fa-solid fa-file-prescription text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Prescriptions</span>
+      </a>
+      <a href="orders.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Orders">
+        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Orders</span>
+      </a>
+      <a href="stock.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Stock">
+        <i class="fa-solid fa-pills text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Stock</span>
+      </a>
+      <a href="profile.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Profile">
+        <i class="fa-solid fa-user-doctor text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Profile</span>
+      </a>
+      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Logout">
+        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
+        <span class="sidebar-label hidden md:inline text-error">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare Pharmacy</a>
+      <div class="flex items-center gap-4">
+        <div class="indicator">
+          <span class="indicator-item badge badge-error">3</span>
+          <button class="btn btn-ghost text-xl" title="Messages">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+        <div class="indicator">
+          <span class="indicator-item badge badge-warning">2</span>
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="#">Profile</a></li>
+            <li><a href="/client/index.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Section -->
+    <div class="container mx-auto px-2 py-8">
+      <!-- Search & Filter -->
+      <div class="flex flex-wrap gap-4 mb-6 items-center">
+        <input type="text" id="searchDrug" class="input input-bordered w-40" placeholder="Search Drug Name" />
+        <select id="filterCategory" class="select select-bordered w-40">
+          <option value="">All Categories</option>
+          <option>Pain and Inflammation</option>
+          <option>Respiratory and Allergy Care</option>
+          <option>Digestive Health</option>
+          <option>Eye and Ear Care</option>
+          <option>Vitamins and Supplements</option>
+          <option>Personal Care and Hygiene</option>
+          <option>Family Health</option>
+          <option>First Aid and Medical Devices</option>
+          <option>Foot and Leg Care</option>
+          <option>Habit Treatment</option>
+        </select>
+      </div>
+
+      <!-- Stock Table -->
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Drug Name</th>
+              <th>Category</th>
+              <th>Quantity</th>
+              <th>Expiry Date</th>
+              <th>Prescription Required</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="stockTable">
+            <!-- JS will render rows here -->
+          </tbody>
+        </table>
+      </div>
+      <!-- Pagination -->
+      <div id="pagination" class="flex justify-center mt-8 gap-2"></div>
+    </div>
+
+    <!-- Edit/Restock Modal -->
+    <dialog id="editModal" class="modal">
+      <form method="dialog" class="modal-box max-w-md">
+        <h3 class="font-bold text-lg mb-2 text-primary" id="editModalTitle">Edit Drug</h3>
+        <div class="flex flex-col gap-4">
+          <input type="text" id="editName" class="input input-bordered w-full" placeholder="Drug Name" required />
+          <input type="number" id="editQuantity" class="input input-bordered w-full" min="0" placeholder="Quantity" required />
+          <input type="date" id="editExpiry" class="input input-bordered w-full" required />
+          <select id="editPrescription" class="select select-bordered w-full">
+            <option value="Yes">Yes</option>
+            <option value="No">No</option>
+          </select>
+        </div>
+        <div class="flex gap-4 mt-6 justify-end">
+          <button type="button" id="saveEditBtn" class="btn btn-primary">Save</button>
+          <button type="button" id="cancelEditBtn" class="btn btn-outline">Cancel</button>
+        </div>
+      </form>
+      <form method="dialog" class="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
+
+    <script>
+      // Dummy stock data
+      let drugs = [
+        {
+          name: "Paracetamol",
+          category: "Pain and Inflammation",
+          quantity: 5,
+          expiry: "2024-06-15",
+          prescription: "No"
+        },
+        {
+          name: "Amoxicillin",
+          category: "Family Health",
+          quantity: 0,
+          expiry: "2024-07-01",
+          prescription: "Yes"
+        },
+        {
+          name: "Ibuprofen",
+          category: "Pain and Inflammation",
+          quantity: 20,
+          expiry: "2024-08-10",
+          prescription: "No"
+        },
+        {
+          name: "Cetirizine",
+          category: "Respiratory and Allergy Care",
+          quantity: 2,
+          expiry: "2024-06-05",
+          prescription: "No"
+        },
+        {
+          name: "Vitamin C",
+          category: "Vitamins and Supplements",
+          quantity: 30,
+          expiry: "2025-01-01",
+          prescription: "No"
+        }
+      ];
+
+      // Pagination settings
+      const pageSize = 4;
+      let currentPage = 1;
+      let filteredDrugs = drugs;
+
+      // Status logic
+      function getStatus(drug) {
+        const today = new Date();
+        const expiry = new Date(drug.expiry);
+        const daysToExpiry = (expiry - today) / (1000 * 60 * 60 * 24);
+        if (drug.quantity === 0) return '<span class="badge badge-error">Out of Stock</span>';
+        if (drug.quantity < 5) return '<span class="badge badge-warning">Low Stock</span>';
+        if (daysToExpiry < 14) return '<span class="badge badge-warning">Expiring Soon</span>';
+        return '<span class="badge badge-success">Available</span>';
+      }
+
+      // Render table
+      function renderTable() {
+        const tbody = document.getElementById('stockTable');
+        tbody.innerHTML = '';
+        const start = (currentPage - 1) * pageSize;
+        const end = start + pageSize;
+        const pageDrugs = filteredDrugs.slice(start, end);
+
+        pageDrugs.forEach((drug, idx) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${drug.name}</td>
+            <td>${drug.category}</td>
+            <td>${drug.quantity}</td>
+            <td>${drug.expiry}</td>
+            <td>${drug.prescription}</td>
+            <td>${getStatus(drug)}</td>
+            <td>
+              <button class="btn btn-xs btn-outline btn-success edit-btn" data-idx="${idx}">Edit</button>
+              <button class="btn btn-xs btn-outline btn-info restock-btn" data-idx="${idx}">Restock</button>
+              <button class="btn btn-xs btn-outline btn-error delete-btn" data-idx="${idx}">Delete</button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        // Edit button logic
+        document.querySelectorAll('.edit-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
+            openEditModal(idx, "Edit Drug");
+          };
+        });
+        // Restock button logic
+        document.querySelectorAll('.restock-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
+            openEditModal(idx, "Restock Drug");
+          };
+        });
+        // Delete button logic
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+          btn.onclick = function() {
+            const idx = parseInt(this.getAttribute('data-idx')) + (currentPage - 1) * pageSize;
+            drugs.splice(idx, 1);
+            filteredDrugs = drugs;
+            renderTable();
+            renderPagination();
+          };
+        });
+      }
+
+      // Edit/Restock modal logic
+      const editModal = document.getElementById('editModal');
+      let editIdx = null;
+      function openEditModal(idx, title) {
+        editIdx = idx;
+        const drug = filteredDrugs[idx];
+        document.getElementById('editModalTitle').textContent = title;
+        document.getElementById('editName').value = drug.name;
+        document.getElementById('editQuantity').value = drug.quantity;
+        document.getElementById('editExpiry').value = drug.expiry;
+        document.getElementById('editPrescription').value = drug.prescription;
+        editModal.showModal();
+      }
+      document.getElementById('saveEditBtn').onclick = function() {
+        const drug = filteredDrugs[editIdx];
+        drug.name = document.getElementById('editName').value;
+        drug.quantity = parseInt(document.getElementById('editQuantity').value);
+        drug.expiry = document.getElementById('editExpiry').value;
+        drug.prescription = document.getElementById('editPrescription').value;
+        editModal.close();
+        renderTable();
+        renderPagination();
+      };
+      document.getElementById('cancelEditBtn').onclick = function() {
+        editModal.close();
+      };
+
+      // Search/filter logic
+      document.getElementById('searchDrug').addEventListener('input', function() {
+        filterDrugs();
+      });
+      document.getElementById('filterCategory').addEventListener('change', function() {
+        filterDrugs();
+      });
+      function filterDrugs() {
+        const name = document.getElementById('searchDrug').value.trim().toLowerCase();
+        const cat = document.getElementById('filterCategory').value;
+        filteredDrugs = drugs.filter(d =>
+          (!name || d.name.toLowerCase().includes(name)) &&
+          (!cat || d.category === cat)
+        );
+        currentPage = 1;
+        renderTable();
+        renderPagination();
+      }
+
+      // Pagination
+      function renderPagination() {
+        const pag = document.getElementById('pagination');
+        pag.innerHTML = '';
+        const totalPages = Math.ceil(filteredDrugs.length / pageSize);
+        if (totalPages <= 1) return;
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.className = `btn btn-outline btn-sm ${i === currentPage ? 'btn-active btn-primary' : ''}`;
+          btn.textContent = i;
+          btn.onclick = () => {
+            currentPage = i;
+            renderTable();
+            renderPagination();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          };
+          pag.appendChild(btn);
+        }
+      }
+
+      // Initial render
+      renderTable();
+      renderPagination();
+
+      // Sidebar toggle logic
+      const sidebar = document.getElementById('sidebar');
+      const mainContent = document.getElementById('mainContent');
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      sidebarToggle.addEventListener('click', function() {
+        if (sidebar.classList.contains('md:w-64')) {
+          sidebar.classList.remove('md:w-64');
+          sidebar.classList.add('w-16');
+          mainContent.classList.remove('md:ml-64');
+          mainContent.classList.add('ml-16');
+          document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
+        } else {
+          sidebar.classList.remove('w-16');
+          sidebar.classList.add('md:w-64');
+          mainContent.classList.remove('ml-16');
+          mainContent.classList.add('md:ml-64');
+          document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>

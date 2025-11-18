@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8">
+  <title>Pharmacist Profile | Medicare Pharmacy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-base-100 min-h-screen flex">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
+    <div class="flex items-center justify-between px-2 py-4 border-b border-base-300">
+      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Medicare</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-2 mt-4">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Dashboard">
+        <i class="fa-solid fa-house-chimney text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Dashboard</span>
+      </a>
+      <a href="prescriptions.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Prescriptions">
+        <i class="fa-solid fa-file-prescription text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Prescriptions</span>
+      </a>
+      <a href="orders.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Orders">
+        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Orders</span>
+      </a>
+      <a href="stock.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Stock">
+        <i class="fa-solid fa-pills text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Stock</span>
+      </a>
+      <a href="profile.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Profile">
+        <i class="fa-solid fa-user-doctor text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Profile</span>
+      </a>
+      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-4 py-2 sidebar-link group" title="Logout">
+        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
+        <span class="sidebar-label hidden md:inline text-error">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare Pharmacy</a>
+      <div class="flex items-center gap-4">
+        <div class="indicator">
+          <span class="indicator-item badge badge-warning">2</span>
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <div class="indicator">
+          <span class="indicator-item badge badge-success">3</span>
+          <button class="btn btn-ghost text-xl" title="Messages">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="pharmacistDashboard.html">Dashboard</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="/client/index.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Profile Section -->
+    <div class="container mx-auto px-2 py-8 flex flex-col items-center">
+      <div class="card bg-base-100 shadow-md max-w-lg w-full p-8">
+        <div class="flex flex-col items-center gap-3 mb-6">
+          <div class="avatar">
+            <div class="w-20 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </div>
+          <h1 class="text-2xl font-bold text-primary">Pharmacist Profile</h1>
+          <p class="text-base text-gray-500">Manage your account information and settings.</p>
+        </div>
+        <form id="profileForm" class="flex flex-col gap-5">
+          <div class="form-control">
+            <label class="label font-semibold" for="fullName">Full Name</label>
+            <input type="text" id="fullName" class="input input-bordered w-full" required />
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="email">Email</label>
+            <input type="email" id="email" class="input input-bordered w-full" required readonly />
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="phone">Phone Number</label>
+            <input type="tel" id="phone" class="input input-bordered w-full" required pattern="^07\\d{8}$" />
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="license">License Number</label>
+            <input type="text" id="license" class="input input-bordered w-full" required />
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="password">Password</label>
+            <div class="relative">
+              <input type="password" id="password" class="input input-bordered w-full pr-10" required />
+              <button type="button" id="togglePassword" class="absolute right-2 top-2 text-gray-400"><i class="fa-solid fa-eye"></i></button>
+            </div>
+          </div>
+          <div class="form-control">
+            <label class="label font-semibold" for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" class="input input-bordered w-full" required />
+          </div>
+          <div class="flex gap-4 mt-2">
+            <button type="submit" class="btn btn-primary flex-1">Save Changes</button>
+            <button type="button" id="deleteBtn" class="btn btn-error flex-1">Delete Account</button>
+          </div>
+        </form>
+        <div id="alert" class="alert mt-4 hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dummy pharmacist data
+    let pharmacist = {
+      fullName: "Dr. Alice Pharmacist",
+      email: "alice.pharmacist@email.com",
+      phone: "0712345678",
+      license: "PHRM-2024-001",
+      password: "password123"
+    };
+
+    // Render profile info
+    function renderProfile() {
+      document.getElementById('fullName').value = pharmacist.fullName;
+      document.getElementById('email').value = pharmacist.email;
+      document.getElementById('phone').value = pharmacist.phone;
+      document.getElementById('license').value = pharmacist.license;
+      document.getElementById('password').value = pharmacist.password;
+      document.getElementById('confirmPassword').value = pharmacist.password;
+    }
+
+    // Password toggle
+    document.getElementById('togglePassword').onclick = function() {
+      const pwd = document.getElementById('password');
+      if (pwd.type === "password") {
+        pwd.type = "text";
+        this.innerHTML = '<i class="fa-solid fa-eye-slash"></i>';
+      } else {
+        pwd.type = "password";
+        this.innerHTML = '<i class="fa-solid fa-eye"></i>';
+      }
+    };
+
+    // Save changes logic
+    document.getElementById('profileForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('fullName').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const license = document.getElementById('license').value.trim();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const alertDiv = document.getElementById('alert');
+      alertDiv.classList.add('hidden');
+
+      if (!fullName || !phone || !license || !password || !confirmPassword) {
+        showAlert("Please fill in all fields.", "alert-error");
+        return;
+      }
+      if (password !== confirmPassword) {
+        showAlert("Passwords do not match.", "alert-error");
+        return;
+      }
+      if (!/^07\d{8}$/.test(phone)) {
+        showAlert("Phone number must start with 07 and be 10 digits.", "alert-error");
+        return;
+      }
+      // Simulate save
+      pharmacist.fullName = fullName;
+      pharmacist.phone = phone;
+      pharmacist.license = license;
+      pharmacist.password = password;
+      showAlert("✅ Profile updated successfully.", "alert-success");
+    });
+
+    function showAlert(msg, type) {
+      const alertDiv = document.getElementById('alert');
+      alertDiv.textContent = msg;
+      alertDiv.className = `alert mt-4 ${type}`;
+      alertDiv.classList.remove('hidden');
+      setTimeout(() => {
+        alertDiv.classList.add('hidden');
+      }, 2000);
+    }
+
+    // Delete account logic
+    document.getElementById('deleteBtn').onclick = function() {
+      window.location.href = "contactAdmin.html";
+    };
+
+    // Sidebar toggle logic
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    sidebarToggle.addEventListener('click', function() {
+      if (sidebar.classList.contains('md:w-64')) {
+        sidebar.classList.remove('md:w-64');
+        sidebar.classList.add('w-16');
+        mainContent.classList.remove('md:ml-64');
+        mainContent.classList.add('ml-16');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
+      } else {
+        sidebar.classList.remove('w-16');
+        sidebar.classList.add('md:w-64');
+        mainContent.classList.remove('ml-16');
+        mainContent.classList.add('md:ml-64');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
+      }
+    });
+
+    // Initial render
+    renderProfile();
+  </script>
+</body>
+</html>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8">
+  <title>Incoming Orders | Pharmacist Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-base-100 min-h-screen flex">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
+    <div class="flex items-center px-2 py-4 border-b border-base-300">
+      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Medicare</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1 mt-2">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Dashboard">
+        <i class="fa-solid fa-house-chimney text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Dashboard</span>
+      </a>
+      <a href="prescriptions.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Prescriptions">
+        <i class="fa-solid fa-file-prescription text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Prescriptions</span>
+      </a>
+      <a href="orders.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Orders">
+        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Orders</span>
+      </a>
+      <a href="stock.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Stock">
+        <i class="fa-solid fa-pills text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Stock</span>
+      </a>
+      <a href="profile.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Profile">
+        <i class="fa-solid fa-user-doctor text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Profile</span>
+      </a>
+      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Logout">
+        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
+        <span class="sidebar-label hidden md:inline text-error">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <a href="pharmacistDashboard.html" class="btn btn-ghost text-xl font-bold text-primary">Medicare Pharmacy</a>
+      <div class="flex items-center gap-4">
+        <div class="indicator">
+          <span class="indicator-item badge badge-warning">2</span>
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <div class="indicator">
+          <span class="indicator-item badge badge-success">3</span>
+          <button class="btn btn-ghost text-xl" onclick="window.location.href='chatSupport.html'" title="Messages">
+            <i class="fa-solid fa-envelope"></i>
+          </button>
+        </div>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/pharmacist-avatar.jpg" alt="Pharmacist Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="../pages/profile.html">Profile</a></li>
+            <li><a href="../loginPharmacist.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Section -->
+    <div class="container mx-auto px-2 py-8">
+      <h1 class="text-3xl font-bold text-primary mb-2">Incoming Orders</h1>
+      <p class="mb-6 text-base text-gray-600">Manage and track all customer orders in real time.</p>
+      <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Customer</th>
+              <th>Items Ordered</th>
+              <th>Total Amount</th>
+              <th>Payment Status</th>
+              <th>Order Status</th>
+              <th>Date Ordered</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="ordersTable">
+            <!-- JS will render orders here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Dummy orders data
+    let orders = [
+      {
+        id: "ORD12345",
+        customer: "Jane Doe",
+        items: ["Paracetamol x2", "Ibuprofen x1"],
+        total: 2500,
+        payment: "Paid",
+        status: "Pending",
+        date: "2024-06-04",
+      },
+      {
+        id: "ORD12346",
+        customer: "John Smith",
+        items: ["Amoxicillin x1"],
+        total: 1800,
+        payment: "Pending",
+        status: "Pending",
+        date: "2024-06-03",
+      },
+      {
+        id: "ORD12347",
+        customer: "Mary Wanjiku",
+        items: ["Cetirizine x3", "Vitamin C x2"],
+        total: 1200,
+        payment: "Failed",
+        status: "Pending",
+        date: "2024-06-02",
+      },
+      {
+        id: "ORD12348",
+        customer: "Ali Mwangi",
+        items: ["Losartan x1"],
+        total: 500,
+        payment: "Paid",
+        status: "Ready",
+        date: "2024-06-01",
+      }
+    ];
+
+    function renderOrders() {
+      const tbody = document.getElementById('ordersTable');
+      tbody.innerHTML = '';
+      orders.forEach((order, idx) => {
+        const isPaid = order.payment === "Paid";
+        const isReady = order.status === "Ready";
+        const paymentBadge = isPaid
+          ? '<span class="badge badge-success">Paid</span>'
+          : order.payment === "Pending"
+            ? '<span class="badge badge-warning">Pending</span>'
+            : '<span class="badge badge-error">Failed</span>';
+        const statusBadge = isReady
+          ? '<span class="badge badge-success">Ready</span>'
+          : '<span class="badge badge-warning">Pending</span>';
+        const actionBtn = isPaid && !isReady
+          ? `<button class="btn btn-primary btn-xs mark-ready-btn" data-idx="${idx}">Mark as Ready</button>`
+          : '—';
+        const itemsList = `<details class="collapse collapse-arrow bg-base-200 rounded">
+          <summary class="collapse-title text-sm font-semibold">View Items</summary>
+          <div class="collapse-content text-xs">${order.items.map(i => `<div>${i}</div>`).join('')}</div>
+        </details>`;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${order.id}</td>
+          <td>${order.customer}</td>
+          <td>${itemsList}</td>
+          <td>KES ${order.total.toLocaleString()}</td>
+          <td>${paymentBadge}</td>
+          <td>${statusBadge}</td>
+          <td>${order.date}</td>
+          <td>${actionBtn}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Mark as Ready button logic
+      document.querySelectorAll('.mark-ready-btn').forEach(btn => {
+        btn.onclick = function() {
+          const idx = parseInt(this.getAttribute('data-idx'));
+          orders[idx].status = "Ready";
+          renderOrders();
+        };
+      });
+    }
+
+    // Initial render
+    renderOrders();
+
+        // Sidebar toggle logic
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    sidebarToggle.addEventListener('click', function() {
+      if (sidebar.classList.contains('md:w-64')) {
+        sidebar.classList.remove('md:w-64');
+        sidebar.classList.add('w-16');
+        mainContent.classList.remove('md:ml-64');
+        mainContent.classList.add('ml-16');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
+      } else {
+        sidebar.classList.remove('w-16');
+        sidebar.classList.add('md:w-64');
+        mainContent.classList.remove('ml-16');
+        mainContent.classList.add('md:ml-64');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
+      }
+    });
+  </script>
+</body>
+</html>

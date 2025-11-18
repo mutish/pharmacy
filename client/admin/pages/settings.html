@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="pastel">
+<head>
+  <meta charset="UTF-8">
+  <title>Settings | Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/daisyui@5" rel="stylesheet" type="text/css" />
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+</head>
+<body class="bg-base-100 min-h-screen flex">
+  <!-- Sidebar Navigation -->
+  <aside id="sidebar" class="fixed top-0 left-0 h-screen bg-base-200 shadow-lg flex flex-col transition-all duration-300 z-50 w-16 md:w-64">
+    <div class="flex items-center px-2 py-4 border-b border-base-300">
+      <button id="sidebarToggle" class="btn btn-ghost btn-sm">
+        <i class="fa-solid fa-bars text-xl"></i>
+      </button>
+      <span class="ml-2 text-xl font-bold text-primary sidebar-label hidden md:inline">Admin</span>
+    </div>
+    <nav class="flex-1 flex flex-col gap-1 mt-2">
+      <a href="dashboard.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Dashboard">
+        <i class="fa-solid fa-gauge-high text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Dashboard</span>
+      </a>
+      <a href="manageUsers.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Users">
+        <i class="fa-solid fa-users text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Users</span>
+      </a>
+      <a href="manageProducts.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Products">
+        <i class="fa-solid fa-capsules text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Products</span>
+      </a>
+      <a href="manageOrders.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Orders">
+        <i class="fa-solid fa-clipboard-list text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Orders</span>
+      </a>
+      <a href="payments.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Payments">
+        <i class="fa-solid fa-money-bill-wave text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Payments</span>
+      </a>
+      <a href="reports.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Reports">
+        <i class="fa-solid fa-chart-line text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Reports</span>
+      </a>
+      <a href="notifications.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Notifications">
+        <i class="fa-solid fa-bell text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Notifications</span>
+      </a>
+      <a href="settings.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Settings">
+        <i class="fa-solid fa-gear text-primary text-xl"></i>
+        <span class="sidebar-label hidden md:inline">Settings</span>
+      </a>
+      <a href="/client/index.html" class="btn btn-ghost flex items-center gap-3 px-2 py-3 sidebar-link group" title="Logout">
+        <i class="fa-solid fa-right-from-bracket text-error text-xl"></i>
+        <span class="sidebar-label hidden md:inline text-error">Logout</span>
+      </a>
+    </nav>
+  </aside>
+  <!-- Main Content Wrapper -->
+  <div id="mainContent" class="flex-1 ml-16 md:ml-64 transition-all duration-300">
+    <!-- Navbar -->
+    <nav class="navbar bg-base-200 shadow-sm px-4 py-2 flex items-center justify-between sticky top-0 z-40">
+      <span class="text-xl font-bold text-primary">Medicare Admin</span>
+      <div class="flex items-center gap-4">
+        <div class="indicator">
+          <span class="indicator-item badge badge-warning">2</span>
+          <button class="btn btn-ghost text-xl" title="Notifications">
+            <i class="fa-solid fa-bell"></i>
+          </button>
+        </div>
+        <div class="dropdown dropdown-end">
+          <label tabindex="0" class="avatar cursor-pointer">
+            <div class="w-10 rounded-full border-2 border-primary">
+              <img src="/client/assets/images/admin-avatar.jpg" alt="Admin Avatar" />
+            </div>
+          </label>
+          <ul tabindex="0" class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-44">
+            <li><a href="profile.html">Profile</a></li>
+            <li><a href="/client/index.html">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main Settings Section -->
+    <div class="container mx-auto px-2 py-8">
+      <h1 class="text-3xl font-bold text-primary mb-6">System Settings</h1>
+      <form id="settingsForm" class="flex flex-col gap-8">
+        <!-- Tax & Fees -->
+        <div class="card bg-base-100 shadow-md p-6">
+          <h2 class="text-lg font-bold text-primary mb-4">Tax & Fees</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="form-control">
+              <label class="label font-semibold" for="vatRate">VAT / Tax Rate (%)</label>
+              <input type="number" id="vatRate" class="input input-bordered w-full" min="0" max="100" step="0.01" required />
+            </div>
+            <div class="form-control">
+              <label class="label font-semibold" for="serviceFee">Service Fee (%)</label>
+              <input type="number" id="serviceFee" class="input input-bordered w-full" min="0" max="100" step="0.01" required />
+            </div>
+            <div class="form-control">
+              <label class="label font-semibold" for="otherCharges">Other Charges (KES)</label>
+              <input type="number" id="otherCharges" class="input input-bordered w-full" min="0" step="0.01" />
+            </div>
+          </div>
+        </div>
+        <!-- Delivery Settings -->
+        <div class="card bg-base-100 shadow-md p-6">
+          <h2 class="text-lg font-bold text-primary mb-4">Delivery Settings</h2>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="form-control">
+              <label class="label font-semibold" for="baseDelivery">Base Delivery Charge (KES)</label>
+              <input type="number" id="baseDelivery" class="input input-bordered w-full" min="0" step="0.01" required />
+            </div>
+            <div class="form-control">
+              <label class="label font-semibold" for="perKmRate">Per-Kilometer Rate (KES)</label>
+              <input type="number" id="perKmRate" class="input input-bordered w-full" min="0" step="0.01" required />
+            </div>
+            <div class="form-control">
+              <label class="label font-semibold" for="estDeliveryTime">Estimated Delivery Time (mins)</label>
+              <input type="number" id="estDeliveryTime" class="input input-bordered w-full" min="0" step="1" required />
+            </div>
+          </div>
+          <div class="form-control mt-4 flex items-center gap-4">
+            <input type="checkbox" id="freeDeliveryEnabled" class="checkbox checkbox-success" />
+            <label for="freeDeliveryEnabled" class="font-semibold">Enable Free Delivery Above</label>
+            <input type="number" id="freeDeliveryThreshold" class="input input-bordered w-32" min="0" step="1" placeholder="Amount (KES)" />
+          </div>
+        </div>
+        <!-- Discounts & Promo Codes -->
+        <div class="card bg-base-100 shadow-md p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-lg font-bold text-primary">Discounts & Promo Codes</h2>
+            <button type="button" id="addPromoBtn" class="btn btn-primary btn-sm"><i class="fa-solid fa-plus mr-2"></i>Add Promo Code</button>
+          </div>
+          <div class="overflow-x-auto mb-4">
+            <table class="table table-zebra w-full">
+              <thead>
+                <tr>
+                  <th>Code</th>
+                  <th>Discount</th>
+                  <th>Expiry</th>
+                  <th>Usage Limit</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="promoTable">
+                <!-- JS will render promo codes here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <!-- System Preferences -->
+        <div class="card bg-base-100 shadow-md p-6">
+          <h2 class="text-lg font-bold text-primary mb-4">System Preferences</h2>
+          <div class="flex flex-wrap gap-6 items-center">
+            <div class="form-control flex-row gap-2 flex items-center">
+              <label class="label font-semibold">Maintenance Mode</label>
+              <input type="checkbox" id="maintenanceMode" class="toggle toggle-warning" />
+            </div>
+            <div class="form-control flex-row gap-2 flex items-center">
+              <label class="label font-semibold">Notifications</label>
+              <input type="checkbox" id="notificationsEnabled" class="toggle toggle-success" />
+            </div>
+            <div class="form-control flex-row gap-2 flex items-center">
+              <label class="label font-semibold">Auto-Invoice Generation</label>
+              <input type="checkbox" id="autoInvoice" class="toggle toggle-info" />
+            </div>
+          </div>
+        </div>
+        <div class="flex justify-end mt-6">
+          <button type="button" id="saveSettingsBtn" class="btn btn-primary px-8">Save Settings</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Promo Code Modal -->
+  <dialog id="promoModal" class="modal">
+    <form method="dialog" class="modal-box max-w-md animate-fadein">
+      <h3 class="font-bold text-lg mb-2 text-primary" id="promoModalTitle">Add Promo Code</h3>
+      <div class="flex flex-col gap-4">
+        <input type="text" id="promoCode" class="input input-bordered w-full" placeholder="Code Name" required />
+        <input type="number" id="promoDiscount" class="input input-bordered w-full" min="0" placeholder="Discount (%) or Amount" required />
+        <input type="date" id="promoExpiry" class="input input-bordered w-full" required />
+        <input type="number" id="promoLimit" class="input input-bordered w-full" min="1" placeholder="Usage Limit" required />
+        <select id="promoType" class="select select-bordered w-full">
+          <option value="Percent">Percent</option>
+          <option value="Amount">Amount</option>
+        </select>
+      </div>
+      <div class="flex gap-4 mt-6 justify-end">
+        <button type="button" id="savePromoBtn" class="btn btn-primary">Save</button>
+        <button type="button" id="cancelPromoBtn" class="btn btn-outline">Cancel</button>
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <!-- Confirm Modal -->
+  <dialog id="confirmModal" class="modal">
+    <form method="dialog" class="modal-box max-w-sm animate-fadein flex flex-col items-center">
+      <span class="text-4xl mb-2">⚙️</span>
+      <h3 class="font-bold text-lg mb-2">Save Settings</h3>
+      <p class="mb-4">Are you sure you want to save these changes?</p>
+      <div class="flex gap-4 w-full justify-end">
+        <button type="button" id="confirmYesBtn" class="btn btn-success">Yes</button>
+        <button type="button" id="confirmNoBtn" class="btn btn-outline">No</button>
+      </div>
+    </form>
+    <form method="dialog" class="modal-backdrop">
+      <button>close</button>
+    </form>
+  </dialog>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-50 hidden">
+    <div id="toastMsg" class="alert shadow-lg transition-all duration-300"></div>
+  </div>
+
+  <script>
+    // Dummy promo codes data
+    let promos = [
+      { code: "VITAMIN10", discount: 10, type: "Percent", expiry: "2024-06-30", limit: 100, status: "Active" },
+      { code: "FREESHIP", discount: 200, type: "Amount", expiry: "2024-06-15", limit: 50, status: "Expired" },
+      { code: "WELCOME", discount: 5, type: "Percent", expiry: "2024-07-10", limit: 200, status: "Upcoming" }
+    ];
+    let editPromoIdx = null;
+
+    function getPromoStatus(promo) {
+      const today = new Date().toISOString().slice(0, 10);
+      if (promo.expiry < today) return "Expired";
+      if (promo.expiry > today) return promo.status === "Active" ? "Active" : "Upcoming";
+      return promo.status;
+    }
+    function getPromoBadge(status) {
+      if (status === "Active") return '<span class="badge badge-success">Active</span>';
+      if (status === "Expired") return '<span class="badge badge-error">Expired</span>';
+      return '<span class="badge badge-info">Upcoming</span>';
+    }
+
+    function renderPromoTable() {
+      const tbody = document.getElementById('promoTable');
+      tbody.innerHTML = '';
+      promos.forEach((p, idx) => {
+        const status = getPromoStatus(p);
+        const discountText = p.type === "Percent" ? `${p.discount}%` : `KES ${p.discount}`;
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${p.code}</td>
+          <td>${discountText}</td>
+          <td>${p.expiry}</td>
+          <td>${p.limit}</td>
+          <td>${getPromoBadge(status)}</td>
+          <td>
+            <button class="btn btn-xs btn-outline btn-success edit-promo-btn" data-idx="${idx}"><i class="fa-solid fa-pen"></i></button>
+            <button class="btn btn-xs btn-outline btn-error delete-promo-btn" data-idx="${idx}"><i class="fa-solid fa-trash"></i></button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      // Edit promo logic
+      document.querySelectorAll('.edit-promo-btn').forEach(btn => {
+        btn.onclick = function() {
+          editPromoIdx = parseInt(this.getAttribute('data-idx'));
+          openPromoModal(editPromoIdx);
+        };
+      });
+      // Delete promo logic
+      document.querySelectorAll('.delete-promo-btn').forEach(btn => {
+        btn.onclick = function() {
+          const idx = parseInt(this.getAttribute('data-idx'));
+          promos.splice(idx, 1);
+          renderPromoTable();
+          showToast("Promo code deleted.", "alert-success");
+        };
+      });
+    }
+
+    function openPromoModal(idx = null) {
+      document.getElementById('promoModalTitle').textContent = idx === null ? "Add Promo Code" : "Edit Promo Code";
+      if (idx !== null) {
+        const p = promos[idx];
+        document.getElementById('promoCode').value = p.code;
+        document.getElementById('promoDiscount').value = p.discount;
+        document.getElementById('promoExpiry').value = p.expiry;
+        document.getElementById('promoLimit').value = p.limit;
+        document.getElementById('promoType').value = p.type;
+      } else {
+        document.getElementById('promoCode').value = "";
+        document.getElementById('promoDiscount').value = "";
+        document.getElementById('promoExpiry').value = "";
+        document.getElementById('promoLimit').value = "";
+        document.getElementById('promoType').value = "Percent";
+      }
+      document.getElementById('promoModal').showModal();
+    }
+    document.getElementById('addPromoBtn').onclick = function() {
+      editPromoIdx = null;
+      openPromoModal();
+    };
+    document.getElementById('savePromoBtn').onclick = function() {
+      const code = document.getElementById('promoCode').value;
+      const discount = parseFloat(document.getElementById('promoDiscount').value);
+      const expiry = document.getElementById('promoExpiry').value;
+      const limit = parseInt(document.getElementById('promoLimit').value);
+      const type = document.getElementById('promoType').value;
+      if (editPromoIdx === null) {
+        promos.push({ code, discount, type, expiry, limit, status: "Active" });
+        showToast("Promo code added.", "alert-success");
+      } else {
+        promos[editPromoIdx] = { code, discount, type, expiry, limit, status: "Active" };
+        showToast("Promo code updated.", "alert-success");
+      }
+      document.getElementById('promoModal').close();
+      renderPromoTable();
+    };
+    document.getElementById('cancelPromoBtn').onclick = function() {
+      document.getElementById('promoModal').close();
+    };
+
+    // Save settings logic
+    document.getElementById('saveSettingsBtn').onclick = function() {
+      document.getElementById('confirmModal').showModal();
+      document.getElementById('confirmYesBtn').onclick = function() {
+        document.getElementById('confirmModal').close();
+        showToast("Settings saved successfully.", "alert-success");
+      };
+      document.getElementById('confirmNoBtn').onclick = function() {
+        document.getElementById('confirmModal').close();
+      };
+    };
+
+    // Toast logic
+    function showToast(msg, type = "alert-success") {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toastMsg.className = `alert shadow-lg transition-all duration-300 ${type}`;
+      toast.classList.remove("hidden");
+      toast.classList.add("animate-fadein");
+      setTimeout(() => {
+        toast.classList.add("hidden");
+        toast.classList.remove("animate-fadein");
+      }, 2000);
+    }
+
+    // Sidebar toggle logic
+    const sidebar = document.getElementById('sidebar');
+    const mainContent = document.getElementById('mainContent');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    sidebarToggle.addEventListener('click', function() {
+      if (sidebar.classList.contains('md:w-64')) {
+        sidebar.classList.remove('md:w-64');
+        sidebar.classList.add('w-16');
+        mainContent.classList.remove('md:ml-64');
+        mainContent.classList.add('ml-16');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.add('hidden'));
+      } else {
+        sidebar.classList.remove('w-16');
+        sidebar.classList.add('md:w-64');
+        mainContent.classList.remove('ml-16');
+        mainContent.classList.add('md:ml-64');
+        document.querySelectorAll('.sidebar-label').forEach(el => el.classList.remove('hidden'));
+      }
+    });
+
+    // Initial render
+    renderPromoTable();
+  </script>
+</body>
+</html>
