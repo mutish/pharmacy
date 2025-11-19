@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MediPlus Pharmacy | Everyday Wellness Delivered</title>
+	<meta name="description" content="MediPlus Pharmacy offers curated wellness essentials, fast doorstep delivery, and licensed guidance. Discover your new daily health routine.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="index, follow">
+	<meta property="og:title" content="MediPlus Pharmacy">
+	<meta property="og:description" content="Minimalist online pharmacy for trusted medications and wellness staples.">
+	<meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=MediPlus+Pharmacy">
+	<link rel="icon" href="assets/favicon.ico">
+	<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+	<header class="site-header" role="banner">
+		<div class="container site-header__inner">
+			<a class="logo" href="#hero">MediPlus</a>
+			<nav aria-label="Primary" class="site-nav">
+				<ul class="nav__list">
+					<li><a href="#features">Why MediPlus</a></li>
+					<li><a href="#products">Products</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#contact">Contact</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<main id="hero">
+		<section class="hero" aria-labelledby="hero-title">
+			<div class="container hero__inner">
+				<div class="hero__content">
+					<p class="hero__eyebrow">Modern care, delivered</p>
+					<h1 id="hero-title">MediPlus pharmacy for everyday wellness</h1>
+					<p>Streamline your health routine with pharmacist-approved products, transparent pricing, and quick delivery across the city.</p>
+					<div class="hero__actions">
+						<a class="btn btn-primary" href="login.html">Get started</a>
+						<a class="btn btn-link" href="#contact">Get in touch</a>
+					</div>
+				</div>
+				<figure class="hero__figure">
+					<img src="assets/images/hero-pharmacy.png" alt="Friendly pharmacist preparing medication packages" loading="lazy">
+				</figure>
+			</div>
+		</section>
+
+		<section id="features" class="section" aria-labelledby="features-title">
+			<div class="container">
+				<h2 id="features-title">Why choose MediPlus</h2>
+				<ul class="feature-list">
+					<li class="feature-card">
+						<h3>Licensed & verified</h3>
+						<p>Partnered with certified suppliers to ensure authentic medications and supplements.</p>
+					</li>
+					<li class="feature-card">
+						<h3>Curated essentials</h3>
+						<p>Effortless selection of daily vitamins, chronic care refills, and wellness boosters.</p>
+					</li>
+					<li class="feature-card">
+						<h3>Fast delivery</h3>
+						<p>Same-day dispatch within Nairobi and next-day shipping nationwide.</p>
+					</li>
+				</ul>
+			</div>
+		</section>
+
+		<section id="products" class="section" aria-labelledby="products-title">
+			<div class="container">
+				<h2 id="products-title">Trending wellness picks</h2>
+				<div class="product-grid">
+					<article class="product-card" data-sku="MP-IMMUNE-01">
+						<img class="product-card__image" src="assets/images/product-immune.png" alt="Immune boost vitamin pack" loading="lazy">
+						<div class="product-card__body">
+							<h3>Immune Boost Daily Pack</h3>
+							<p>Vitamin C, D3, and zinc combo designed to strengthen daily immunity.</p>
+							<span class="product-card__price">KES 2,950</span>
+						</div>
+					</article>
+					<article class="product-card" data-sku="MP-RELIEF-02">
+						<img class="product-card__image" src="assets/images/product-relief.png" alt="Pain relief gel tube" loading="lazy">
+						<div class="product-card__body">
+							<h3>Rapid Relief Gel</h3>
+							<p>Cooling topical gel for instant muscle relaxation and joint comfort.</p>
+							<span class="product-card__price">KES 1,450</span>
+						</div>
+					</article>
+					<article class="product-card" data-sku="MP-SLEEP-03">
+						<img class="product-card__image" src="assets/images/product-sleep.png" alt="Sleep support herbal capsules" loading="lazy">
+						<div class="product-card__body">
+							<h3>Sleep Support Capsules</h3>
+							<p>Gentle botanical blend that promotes deeper, restorative rest.</p>
+							<span class="product-card__price">KES 1,950</span>
+						</div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section id="about" class="section section--alt" aria-labelledby="about-title">
+			<div class="container section__stack">
+				<h2 id="about-title">A simple promise of care</h2>
+				<p>MediPlus Pharmacy blends technology with personal attention. Our licensed pharmacists review every order, offer tailored advice, and make health guidance approachable. From preventive care to chronic management, we deliver clear instructions and reliable follow-up.</p>
+			</div>
+		</section>
+
+		<section id="contact" class="section" aria-labelledby="contact-title">
+			<div class="container contact-card">
+				<h2 id="contact-title">Reach our care team</h2>
+				<address>
+					<p><strong>Email:</strong> <a href="mailto:hello@mediplus.example.com">hello@mediplus.example.com</a></p>
+					<p><strong>Call:</strong> <a href="tel:+254700123456">+254 700 123 456</a></p>
+					<p><strong>Visit:</strong> 47 Riverside Drive, Nairobi</p>
+				</address>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer" role="contentinfo">
+		<div class="container site-footer__inner">
+			<small>&copy; <span id="year">2024</span> MediPlus Pharmacy. All rights reserved.</small>
+		</div>
+	</footer>
+
+	<script type="application/ld+json">
+	[
+		{
+			"@context": "https://schema.org/",
+			"@type": "Product",
+			"name": "Immune Boost Daily Pack",
+			"image": "https://via.placeholder.com/600x400.png?text=Immune+Boost",
+			"description": "Vitamin C, D3, and zinc combination for immunity.",
+			"sku": "MP-IMMUNE-01",
+			"offers": { "@type": "Offer", "priceCurrency": "KES", "price": "2950", "availability": "https://schema.org/InStock" }
+		},
+		{
+			"@context": "https://schema.org/",
+			"@type": "Product",
+			"name": "Rapid Relief Gel",
+			"image": "https://via.placeholder.com/600x400.png?text=Rapid+Relief+Gel",
+			"description": "Cooling topical gel for instant muscle relaxation.",
+			"sku": "MP-RELIEF-02",
+			"offers": { "@type": "Offer", "priceCurrency": "KES", "price": "1450", "availability": "https://schema.org/InStock" }
+		},
+		{
+			"@context": "https://schema.org/",
+			"@type": "Product",
+			"name": "Sleep Support Capsules",
+			"image": "https://via.placeholder.com/600x400.png?text=Sleep+Support",
+			"description": "Botanical blend promoting restorative sleep.",
+			"sku": "MP-SLEEP-03",
+			"offers": { "@type": "Offer", "priceCurrency": "KES", "price": "1950", "availability": "https://schema.org/InStock" }
+		}
+	]
+	</script>
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+	</script>
+</body>
+</html>

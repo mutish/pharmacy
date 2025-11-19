@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MediPlus Pharmacy | Create account</title>
+	<meta name="description" content="Register for a MediPlus Pharmacy account to enjoy personalized wellness recommendations and quick reorders.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex, follow">
+	<link rel="icon" href="assets/favicon.ico">
+	<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+	<header class="site-header" role="banner">
+		<div class="container site-header__inner">
+			<a class="logo" href="index.html">MediPlus</a>
+			<nav aria-label="Primary" class="site-nav">
+				<ul class="nav__list">
+					<li><a href="index.html#features">Why MediPlus</a></li>
+					<li><a href="index.html#products">Products</a></li>
+					<li><a href="login.html">Sign in</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<main class="form-wrapper" aria-labelledby="register-title">
+		<section class="form-card">
+			<h1 id="register-title">Create your MediPlus account</h1>
+			<p class="form-card__subtitle">Set up your profile to track orders and receive tailored care tips.</p>
+			<form class="form" aria-label="Registration form">
+				<label class="form__field">
+					<span>Full name</span>
+					<input type="text" name="name" autocomplete="name" required>
+				</label>
+				<label class="form__field">
+					<span>Email</span>
+					<input type="email" name="email" autocomplete="email" required>
+				</label>
+				<label class="form__field">
+					<span>Password</span>
+					<input type="password" name="password" autocomplete="new-password" required minlength="6">
+				</label>
+				<label class="form__field">
+					<span>Confirm Password</span>
+					<input type="password" name="confirm-password" autocomplete="new-password" required minlength="6">
+				</label>
+				<label class="form__field">
+					<span>Gender</span>
+					<select name="gender" autocomplete="sex" required>
+						<option value="" disabled selected>Select gender</option>
+						<option value="male">Male</option>
+						<option value="female">Female</option>
+					</select>
+				</label>
+				<button class="btn btn-primary form__submit" type="submit">Create account</button>
+			</form>
+			<p class="form-card__footer">Already have an account? <a href="login.html">Sign in</a></p>
+		</section>
+	</main>
+
+	<footer class="site-footer" role="contentinfo">
+		<div class="container site-footer__inner">
+			<small>&copy; <span id="year">2024</span> MediPlus Pharmacy.</small>
+		</div>
+	</footer>
+
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+	</script>
+</body>
+</html>

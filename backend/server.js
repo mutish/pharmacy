@@ -27,13 +27,11 @@ import connectToMongoDB from './config/connectToMongoDB.js';
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-dotenv.config();
-
 // Enable CORS for your client (adjust origin as needed)
 const allowedOrigins = [
   'http://localhost:5500',
   'http://127.0.0.1:5500',
-  'http://localhost:5173', // Vite
+  'http://localhost:5173',
   'http://127.0.0.1:5173'
 ];
 
@@ -65,6 +63,5 @@ app.use("/api/mpesa",mpesaRoutes);
 
   
 app.listen(PORT, () => {
-    connectToMongoDB();
-    console.log(`Server running on port ${PORT}`)
+  connectToMongoDB();
 });
