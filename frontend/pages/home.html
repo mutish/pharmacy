@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MediPlus Pharmacy | Home</title>
+	<meta name="description" content="Discover MediPlus Pharmacy top picks, customer favorites, and wellness tips in a calm, minimalist experience.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="index, follow">
+	<meta property="og:title" content="MediPlus Pharmacy Home">
+	<meta property="og:description" content="Explore curated medicines, customer reviews, and wellness updates from MediPlus Pharmacy.">
+	<meta property="og:image" content="https://via.placeholder.com/1200x630.png?text=MediPlus+Pharmacy+Home">
+	<link rel="icon" href="assets/favicon.ico">
+	<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+	<header class="site-header" role="banner">
+		<div class="container site-header__inner">
+			<a class="logo" href="home.html">MediPlus</a>
+			<div class="nav__search" role="search">
+				<label class="visually-hidden" for="product-search">Search medicines</label>
+				<input id="product-search" type="search" placeholder="Search medicines..." autocomplete="off" aria-describedby="search-results-count">
+			</div>
+			<div class="nav-actions">
+				<a class="icon-button" href="cart.html" aria-label="Open cart">
+					<span aria-hidden="true">🛒</span>
+					<span class="badge" aria-label="2 items in cart">2</span>
+				</a>
+				<button class="icon-button" type="button" aria-label="Notifications">
+					<span aria-hidden="true">🔔</span>
+					<span class="badge" aria-label="5 new notifications">5</span>
+				</button>
+				<div class="avatar-menu">
+					<button class="avatar-menu__trigger" type="button" data-avatar-button aria-haspopup="true" aria-expanded="false">
+						<img src="https://via.placeholder.com/64x64.png?text=JD" alt="User menu">
+					</button>
+					<div class="avatar-menu__dropdown" data-avatar-dropdown role="menu">
+						<a href="profile.html" role="menuitem">Profile</a>
+						<button type="button" role="menuitem" data-theme-toggle>Toggle theme</button>
+						<button type="button" role="menuitem" data-signout>Sign out</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<main>
+		<section class="hero hero--minimal" aria-labelledby="hero-title">
+			<div class="container hero__inner">
+				<div class="hero__content">
+					<p class="hero__eyebrow">Feel-good minimalism</p>
+					<h1 id="hero-title">Wellness staples curated for calm, everyday living.</h1>
+					<p>From immune support to mindful rest, MediPlus keeps essentials simple, verified, and ready when you are.</p>
+					<div class="hero__actions">
+						<a class="btn btn-primary" href="#top-picks">Browse top picks</a>
+						<a class="btn btn-link" href="#subscribe">Subscribe for tips</a>
+					</div>
+				</div>
+				<figure class="hero__figure">
+					<img src="assets/images/hero-pharmacy.png" alt="Neatly arranged pharmacy counter with daily essentials" loading="lazy">
+				</figure>
+			</div>
+		</section>
+
+		<section id="top-picks" class="section" aria-labelledby="top-picks-title">
+			<div class="container">
+				<h2 id="top-picks-title">Top pick medicines</h2>
+				<p id="search-results-count" class="muted-text">Showing 4 results</p>
+				<div class="product-grid product-grid--tight">
+					<article class="product-card" data-product-card data-name="Immune Boost Daily Pack">
+						<img class="product-card__image" src="assets/images/product-immune.png" alt="Immune booster pack">
+						<div class="product-card__body">
+							<h3>Immune Boost Daily Pack</h3>
+							<p>Vitamin C + D3 combo for everyday defenses.</p>
+							<span class="product-card__price">KES 2,950</span>
+						</div>
+					</article>
+					<article class="product-card" data-product-card data-name="Calm Focus Capsules">
+						<img class="product-card__image" src="assets/images/product-focus.png" alt="Focus enhancing capsules">
+						<div class="product-card__body">
+							<h3>Calm Focus Capsules</h3>
+							<p>Adaptogenic blend to keep concentration steady.</p>
+							<span class="product-card__price">KES 2,350</span>
+						</div>
+					</article>
+					<article class="product-card" data-product-card data-name="Rapid Relief Gel">
+						<img class="product-card__image" src="assets/images/product-relief.png" alt="Rapid relief gel tube">
+						<div class="product-card__body">
+							<h3>Rapid Relief Gel</h3>
+							<p>Cooling relief for sore muscles and joints.</p>
+							<span class="product-card__price">KES 1,450</span>
+						</div>
+					</article>
+					<article class="product-card" data-product-card data-name="Sleep Support Capsules">
+						<img class="product-card__image" src="assets/images/product-sleep.png" alt="Sleep support capsules">
+						<div class="product-card__body">
+							<h3>Sleep Support Capsules</h3>
+							<p>Gentle botanicals to ease into deeper rest.</p>
+							<span class="product-card__price">KES 1,950</span>
+						</div>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section class="section section--alt" aria-labelledby="reviews-title">
+			<div class="container">
+				<h2 id="reviews-title">What customers are saying</h2>
+				<div class="reviews-grid">
+					<article class="review-card">
+						<div class="review-card__rating" aria-label="5 out of 5 stars">★★★★★</div>
+						<p>“Orders arrive neatly packed and the product guide makes dosing effortless.”</p>
+						<footer>— Amina, Westlands</footer>
+					</article>
+					<article class="review-card">
+						<div class="review-card__rating" aria-label="4 out of 5 stars">★★★★☆</div>
+						<p>“Love the minimalist picks. The calm focus capsules are my daily go-to.”</p>
+						<footer>— Ben, Kilimani</footer>
+					</article>
+					<article class="review-card">
+						<div class="review-card__rating" aria-label="5 out of 5 stars">★★★★★</div>
+						<p>“Pharmacist chat was reassuring. Looking forward to the full feature launch.”</p>
+						<footer>— Leah, Parklands</footer>
+					</article>
+				</div>
+			</div>
+		</section>
+
+		<section id="subscribe" class="section" aria-labelledby="subscribe-title">
+			<div class="container subscription">
+				<div>
+					<h2 id="subscribe-title">Stay in the MediPlus loop</h2>
+					<p class="muted-text">Wellness tips, product drops, and mindful routines delivered to your inbox.</p>
+				</div>
+				<form class="subscription__form" aria-label="Email subscription form">
+					<label class="visually-hidden" for="subscriber-email">Email address</label>
+					<input id="subscriber-email" type="email" placeholder="your@email.com" required>
+					<button class="btn btn-primary" type="submit">Subscribe</button>
+				</form>
+			</div>
+		</section>
+	</main>
+
+	<footer class="site-footer" role="contentinfo">
+		<div class="container site-footer__inner">
+			<small>&copy; <span id="year">2024</span> MediPlus Pharmacy.</small>
+		</div>
+	</footer>
+
+	<button class="chat-button" type="button" data-chat-button aria-haspopup="true" aria-controls="chat-popup">
+		<span aria-hidden="true">💬</span>
+		<span class="chat-button__label">Chat</span>
+	</button>
+	<div id="chat-popup" class="chat-popup" data-chat-popup role="status" aria-live="polite">
+		Chat feature coming soon.
+	</div>
+
+	<script>
+		const body = document.body;
+		const themeToggle = document.querySelector('[data-theme-toggle]');
+		const avatarButton = document.querySelector('[data-avatar-button]');
+		const avatarDropdown = document.querySelector('[data-avatar-dropdown]');
+		const searchInput = document.getElementById('product-search');
+		const productCards = Array.from(document.querySelectorAll('[data-product-card]'));
+		const resultsCount = document.getElementById('search-results-count');
+		const chatButton = document.querySelector('[data-chat-button]');
+		const chatPopup = document.querySelector('[data-chat-popup]');
+		const signOut = document.querySelector('[data-signout]');
+		const storedTheme = localStorage.getItem('mediplus-theme');
+
+		if (storedTheme === 'dark') body.classList.add('dark-mode');
+
+		const updateTheme = () => {
+			const isDark = body.classList.toggle('dark-mode');
+			localStorage.setItem('mediplus-theme', isDark ? 'dark' : 'light');
+		};
+
+		themeToggle?.addEventListener('click', updateTheme);
+
+		const closeDropdown = () => {
+			avatarDropdown?.classList.remove('avatar-menu__dropdown--open');
+			avatarButton?.setAttribute('aria-expanded', 'false');
+		};
+
+		avatarButton?.addEventListener('click', () => {
+			const isOpen = avatarDropdown.classList.toggle('avatar-menu__dropdown--open');
+			avatarButton.setAttribute('aria-expanded', String(isOpen));
+		});
+
+		document.addEventListener('click', (event) => {
+			if (!avatarDropdown.contains(event.target) && !avatarButton.contains(event.target)) closeDropdown();
+		});
+
+		searchInput?.addEventListener('input', (event) => {
+			const query = event.target.value.trim().toLowerCase();
+			let visible = 0;
+
+			productCards.forEach((card) => {
+				const name = card.dataset.name.toLowerCase();
+				const matches = name.includes(query);
+				card.classList.toggle('product-card--hidden', !matches);
+				if (matches) visible += 1;
+			});
+
+			if (resultsCount) {
+				resultsCount.textContent = `Showing ${visible} result${visible === 1 ? '' : 's'}`;
+			}
+		});
+
+		chatButton?.addEventListener('click', () => {
+			chatPopup.classList.add('chat-popup--visible');
+			setTimeout(() => chatPopup.classList.remove('chat-popup--visible'), 2000);
+		});
+
+		signOut?.addEventListener('click', () => {
+			alert('Sign out coming soon.');
+			closeDropdown();
+		});
+
+		document.getElementById('year').textContent = new Date().getFullYear();
+	</script>
+</body>
+</html>

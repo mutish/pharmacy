@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>MediPlus Pharmacy | Sign in</title>
+	<meta name="description" content="Access your MediPlus Pharmacy account to track orders and manage wellness preferences.">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="robots" content="noindex, follow">
+	<link rel="icon" href="assets/favicon.ico">
+	<link rel="stylesheet" href="assets/css/styles.css">
+</head>
+<body>
+	<header class="site-header" role="banner">
+		<div class="container site-header__inner">
+			<a class="logo" href="index.html">MediPlus</a>
+			<nav aria-label="Primary" class="site-nav">
+				<ul class="nav__list">
+					<li><a href="index.html#features">Why MediPlus</a></li>
+					<li><a href="index.html#products">Products</a></li>
+					<li><a href="register.html">Create account</a></li>
+				</ul>
+			</nav>
+		</div>
+	</header>
+
+	<main class="form-wrapper" aria-labelledby="login-title">
+		<section class="form-card">
+			<h1 id="login-title">Welcome back</h1>
+			<p class="form-card__subtitle">Sign in to manage your wellness essentials.</p>
+			<form class="form" aria-label="Login form">
+				<label class="form__field">
+					<span>Email</span>
+					<input type="email" name="email" autocomplete="email" required>
+				</label>
+				<label class="form__field">
+					<span>Password</span>
+					<input type="password" name="password" autocomplete="current-password" required minlength="6">
+				</label>
+				<button class="btn btn-primary form__submit" type="submit">Sign in</button>
+			</form>
+			<p class="form-card__footer">New to MediPlus? <a href="register.html">Create an account</a></p>
+		</section>
+	</main>
+
+	<footer class="site-footer" role="contentinfo">
+		<div class="container site-footer__inner">
+			<small>&copy; <span id="year">2024</span> MediPlus Pharmacy.</small>
+		</div>
+	</footer>
+
+	<script>
+		document.getElementById('year').textContent = new Date().getFullYear();
+	</script>
+</body>
+</html>
